@@ -3,17 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MATHINK 2026：成大 AI 數創營 | 你的大學履歷決勝點</title>
+    <title>MATHINK 2026：成大 AI 數創營 | 官方網站</title>
     <!-- 引入 Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
     <style>
-        /* --- 1. 全局變量與基本設定 --- */
+        /* --- 1. 全局變量與基本設定 (淺色主題) --- */
         :root {
-            --color-primary: #000000;       /* 核心深色背景 */
-            --color-dark: #0A0A1A;          /* 區塊深色背景 */
-            --color-accent: #00FFFF;        /* 亮青色 / 強調色 */
-            --color-light: #F5F5F5;         /* 主要文字色 */
+            --color-primary: #1D4ED8;       /* 核心藍色 (Deep Blue) */
+            --color-accent: #06B6D4;        /* 強調青色 (Cyan) */
+            --color-light-bg: #F9FAFB;      /* 淺背景 */
+            --color-dark-text: #1F2937;     /* 深色文字 */
+            --color-gray-text: #6B7280;     /* 灰色輔助文字 */
         }
         
         /* Tailwind 設定客製化 */
@@ -21,268 +22,142 @@
             theme: {
                 extend: {
                     colors: {
-                        'primary': 'var(--color-primary)',
-                        'dark-bg': 'var(--color-dark)',
-                        'accent': 'var(--color-accent)',
-                        'light-text': 'var(--color-light)',
+                        'primary-blue': 'var(--color-primary)',
+                        'accent-cyan': 'var(--color-accent)',
+                        'light-bg': 'var(--color-light-bg)',
+                        'dark-text': 'var(--color-dark-text)',
+                        'gray-text': 'var(--color-gray-text)',
                     },
                     fontFamily: {
                         sans: ['Inter', 'Microsoft JhengHei', 'sans-serif'],
                     },
+                    /* 參考網站的圓角和陰影風格 */
+                    boxShadow: {
+                        'custom': '0 10px 30px rgba(0, 0, 0, 0.08)',
+                    }
                 }
             }
         }
 
-        /* --- 2. 基本樣式與通用組件 --- */
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--color-primary);
-            color: var(--color-light);
+            background-color: var(--color-light-bg);
+            color: var(--color-dark-text);
             line-height: 1.6;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1rem;
         }
 
         .section {
             padding: 80px 0;
-            text-align: center;
         }
-
-        h1, h2, h3 {
-            font-weight: 700;
-        }
-
-        h2 {
-            margin-bottom: 30px;
-            color: var(--color-light);
-            font-size: 2.5rem;
-        }
-
-        /* --- 3. CTA 按鈕樣式 --- */
+        
+        /* --- 2. 導航欄與 CTA --- */
         .cta-button {
-            padding: 12px 30px;
+            padding: 10px 24px;
             border-radius: 9999px;
             font-weight: 600;
             transition: all 0.3s ease;
             text-decoration: none;
             display: inline-block;
-            box-shadow: 0 4px 15px rgba(0, 255, 255, 0.2);
         }
 
         .primary-cta {
-            background-color: var(--color-accent);
-            color: var(--color-primary);
+            background-color: var(--color-primary);
+            color: white;
+            box-shadow: 0 4px 15px rgba(29, 78, 216, 0.3);
         }
 
         .primary-cta:hover {
-            background-color: #33FFFF;
-            box-shadow: 0 4px 25px rgba(0, 255, 255, 0.5);
+            background-color: #1E40AF; /* Darker blue */
+            box-shadow: 0 6px 20px rgba(29, 78, 216, 0.4);
         }
 
-        .secondary-cta {
-             background-color: transparent;
-             border: 2px solid var(--color-accent);
-             color: var(--color-accent);
-             margin-top: 20px;
-        }
-
-        .secondary-cta:hover {
-            background-color: rgba(0, 255, 255, 0.1);
-        }
-        
-        /* --- 4. Hero 區塊樣式 --- */
+        /* --- 3. Hero 區塊樣式 --- */
         .hero-section {
-            padding: 150px 0;
-            background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url('https://placehold.co/1920x800/0A0A1A/00FFFF?text=DATA+FLOW+VISUAL');
-            background-size: cover;
-            background-position: center;
-        }
-
-        .hero-content h1 {
-            color: var(--color-accent);
-            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
-            font-size: 3rem;
-            line-height: 1.2;
-            margin-bottom: 1rem;
-        }
-        
-        .hero-content .subtitle {
-            font-size: 1.25rem;
-            color: #B0B0B0;
-            margin-bottom: 2rem;
-        }
-
-        /* --- 5. 亮點區塊 (H2) 樣式 --- */
-        .highlight-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            margin-top: 40px;
-        }
-
-        .highlight-item {
-            background-color: var(--color-dark);
-            padding: 30px;
-            border-radius: 12px;
-            border-top: 3px solid var(--color-accent);
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s;
-        }
-        
-        .highlight-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 30px rgba(0, 255, 255, 0.1);
-        }
-
-        .highlight-item .icon {
-            font-size: 2.5rem;
-            color: var(--color-accent);
-            display: block;
-            margin-bottom: 10px;
-        }
-
-        /* --- 6. PAGP 專區樣式 --- */
-        .pagp-focus-section {
-            background-color: var(--color-dark);
-        }
-
-        .pagp-focus-section h2 {
-            color: var(--color-accent);
-            text-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
-        }
-        
-        .pagp-grid {
-            display: flex;
-            justify-content: space-around;
-            gap: 30px;
-            margin-top: 30px;
-        }
-
-        .pagp-item {
-            flex-basis: 30%;
+            padding: 120px 0;
+            background-color: white;
+            /* 參考網站的抽象背景線條感 */
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23F0F4FF' fill-opacity='0.4'%3E%3Cpath d='M30 30V0h30v30H30zm15 15v-15h15v15H45zM15 15V0h15v15H15zM45 45V30h15v15H45zm-15 0V30h15v15H30zM0 30h15v15H0zm0-15h15v15H0z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
             text-align: left;
-            padding: 20px;
-            border-left: 3px solid var(--color-accent); 
         }
 
-        .pagp-item h3 {
-            color: var(--color-accent);
-            margin-bottom: 10px;
-        }
-
-        .step-num {
-            display: block;
-            font-size: 2.5em;
-            font-weight: bold;
-            color: var(--color-light);
-            opacity: 0.8;
-            margin-bottom: 5px;
-        }
-
-        /* --- 7. 價格與團報區塊樣式 (新增) --- */
-        .pricing-section {
-            background-image: linear-gradient(180deg, var(--color-primary), #050510);
-            padding-bottom: 100px;
-        }
-        
+        /* --- 4. 價格卡片樣式 (Light Theme) --- */
         .price-card {
-            background-color: var(--color-dark);
-            padding: 30px;
-            border-radius: 16px;
-            text-align: center;
-            border: 2px solid transparent;
-            transition: all 0.3s;
+            background-color: white;
+            border: 1px solid #E5E7EB;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s, border-color 0.3s;
+            height: 100%;
+        }
+
+        .price-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--color-accent);
+            box-shadow: 0 10px 20px rgba(6, 182, 212, 0.15);
+        }
+
+        .best-deal {
+            border-color: var(--color-primary) !important;
+            border-width: 3px;
+            box-shadow: 0 15px 35px rgba(29, 78, 216, 0.2);
             position: relative;
             overflow: hidden;
-            height: 100%; /* 確保卡片等高 */
-        }
-        
-        /* 最佳方案的強調效果 */
-        .best-deal {
-            border-color: var(--color-accent);
-            box-shadow: 0 0 30px rgba(0, 255, 255, 0.4);
-        }
-
-        .best-deal .ribbon {
-            position: absolute;
-            top: 0;
-            right: 0;
-            background-color: var(--color-accent);
-            color: var(--color-primary);
-            font-weight: bold;
-            padding: 0 10px;
-            transform: rotate(45deg) translate(25%, -10%);
-            transform-origin: top right;
-            width: 150px;
-            text-align: center;
         }
 
         .price-text {
-            font-size: 2.5rem;
+            font-size: 2.25rem;
             font-weight: 800;
-            color: var(--color-accent);
-            line-height: 1;
+            color: var(--color-primary);
         }
-
-        .old-price {
-            text-decoration: line-through;
-            color: #888;
-            margin-bottom: 5px;
-        }
-
-        /* 住宿卡片特殊樣式 */
+        
+        /* 住宿卡片 */
         .accommodation-card {
-            background-color: #0E0E2E; /* 略微不同的深色 */
-            border: 1px solid #3A3A8A;
-            box-shadow: 0 0 15px rgba(100, 100, 255, 0.2);
+            background-color: #ECFDF5; /* 淺綠色背景 */
+            border: 2px dashed #10B981; /* 綠色虛線 */
         }
-
-
-        /* --- 8. FAQ 區塊樣式 --- */
+        
+        /* --- 5. FAQ 樣式 (Light Theme) --- */
         .faq-item {
-            border-bottom: 1px solid #1a1a1a;
-            text-align: left;
+            border: 1px solid #E5E7EB;
+            margin-bottom: 12px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
         }
-
+        
         .faq-question {
-            background-color: var(--color-primary);
-            color: var(--color-light);
-            padding: 18px;
+            background-color: white;
+            color: var(--color-dark-text);
+            padding: 18px 20px;
             width: 100%;
             border: none;
             text-align: left;
-            outline: none;
-            font-size: 1.1rem;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         .faq-question:hover {
-            background-color: #0A0A1A;
+            background-color: #F3F4F6;
         }
 
         .faq-question.active {
-            color: var(--color-accent); 
-            background-color: rgba(0, 255, 255, 0.05); 
+            color: var(--color-primary); 
+            background-color: #EBF8FF; 
         }
         
-        /* FAQ 箭頭/符號 */
         .faq-question::after {
             content: '+'; 
             font-size: 1.5rem;
             color: var(--color-accent);
-            transition: transform 0.3s;
+            transition: transform 0.2s;
         }
 
         .faq-question.active::after {
             content: '−'; 
+            color: var(--color-primary);
         }
 
 
@@ -290,205 +165,225 @@
             max-height: 0; 
             overflow: hidden;
             transition: max-height 0.3s ease-out, padding 0.3s ease-out; 
-            padding: 0 18px; 
-            background-color: var(--color-dark);
-            color: #D0D0D0;
-        }
-        
-        /* --- 9. 響應式調整 --- */
-        @media (max-width: 1024px) {
-            .highlight-grid, .pagp-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .pricing-grid {
-                grid-template-columns: repeat(2, 1fr) !important;
-            }
+            padding: 0 20px; 
+            background-color: #F9FAFB;
+            color: var(--color-gray-text);
+            text-align: left;
         }
 
-        @media (max-width: 640px) {
-            .highlight-grid {
-                grid-template-columns: 1fr;
+        /* --- 6. 響應式調整 --- */
+        @media (max-width: 768px) {
+            .hero-content {
+                text-align: center;
             }
-            .pagp-grid {
-                flex-direction: column;
-                align-items: center;
-            }
-            .pagp-item {
-                flex-basis: 90%;
+            .hero-content img {
+                margin: 0 auto;
             }
             .pricing-grid {
                 grid-template-columns: 1fr !important;
-            }
-            .accommodation-card {
-                grid-column: span 1 !important; /* 確保在小螢幕上只佔一欄 */
             }
         }
     </style>
 </head>
 <body>
 
-    <!-- H1: HERO 區塊 (核心宣傳與 CTA) -->
+    <!-- 導航欄 (Navigation) -->
+    <header class="sticky top-0 bg-white shadow-md z-10">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="#hero" class="text-2xl font-bold text-primary-blue">MATHINK 2026</a>
+            <nav class="hidden md:flex space-x-6 text-dark-text">
+                <a href="#highlights" class="hover:text-primary-blue transition">營隊特色</a>
+                <a href="#pagp" class="hover:text-primary-blue transition">PAGP專區</a>
+                <a href="#program" class="hover:text-primary-blue transition">課程大綱</a>
+                <a href="#pricing" class="hover:text-primary-blue transition font-bold">費用與團報</a>
+                <a href="#faq" class="hover:text-primary-blue transition">常見問題</a>
+            </nav>
+            <a href="https://forms.gle/kK6SNVtYb5uUNRvs6" target="_blank" class="cta-button primary-cta hidden sm:inline-block">立即報名</a>
+        </div>
+    </header>
+
+    <!-- H1: HERO 區塊 -->
     <section id="hero" class="hero-section">
-        <div class="container">
-            <div class="hero-content text-center">
-                <h1>MATHINK 2026：成大 AI 數創營 — 你的大學履歷，從數學建模開始！</h1>
-                <p class="subtitle">不再紙上談兵！四天三夜，讓抽象數學成為你解決真實世界的 AI 武器。</p>
-                <p class="date text-lg text-white mb-8">2026/01/28 - 01/31 | 成功大學</p>
-                <!-- 價格更新，強調團報最低價 -->
-                <a href="#pricing" class="cta-button primary-cta">團報最低 NT$ 4,800 元起！立即組隊！</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- H2: 營隊亮點 (三大核心價值) -->
-    <section id="highlights" class="section bg-dark-bg">
-        <div class="container">
-            <h2 class="text-light-text">— 為什麼選擇 MATHINK？ —</h2>
-            <div class="highlight-grid">
-                <div class="highlight-item">
-                    <span class="icon">📄</span> 
-                    <h3>【成大認證】PAGP 數創專案</h3>
-                    <p class="text-sm text-gray-400">完整產出數創競賽報告與口頭報告簡報，為你的學習歷程檔案提供強而有力的學術證明。</p>
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-2 gap-10 items-center">
+                <div class="hero-content">
+                    <h1 class="text-4xl lg:text-5xl font-extrabold leading-tight text-dark-text">
+                        從數學建模到 AI 實戰
+                        <span class="text-primary-blue block mt-2">成大 MATHINK 2026</span>
+                    </h1>
+                    <p class="text-lg mt-4 mb-6 text-gray-text">
+                        四天三夜，親手打造你的高含金量 PAGP 專案報告，開啟頂大入學之路。
+                    </p>
+                    <div class="space-y-4 sm:space-x-4 sm:space-y-0">
+                        <a href="https://forms.gle/kK6SNVtYb5uUNRvs6" target="_blank" class="cta-button primary-cta">
+                            🔥 團報最低 NT$ 4,800！馬上組隊
+                        </a>
+                        <a href="#program" class="cta-button bg-gray-200 text-dark-text hover:bg-gray-300">
+                            查看課程大綱
+                        </a>
+                    </div>
                 </div>
-                <div class="highlight-item">
-                    <span class="icon">🧠</span>
-                    <h3>【AI 實戰】從建模到應用</h3>
-                    <p class="text-sm text-gray-400">課程結合量子AI、物聯網、數據庫等前瞻領域，親手完成一次完整的數學建模與問題解決。</p>
-                </div>
-                <div class="highlight-item">
-                    <span class="icon">🎓</span>
-                    <h3>【頂大體驗】四天三夜沈浸式學習</h3>
-                    <p class="text-sm text-gray-400">全程進駐成功大學校園，體驗頂尖學府的學習氛圍與資源，高自由度探索未來。</p>
+                <div class="hidden md:block">
+                    <!-- 模擬參考網站的科技感圖像 -->
+                    <img src="https://placehold.co/600x400/D0E0FF/001F3F?text=AI+Modeling+Visual" onerror="this.src='https://placehold.co/600x400/D0E0FF/001F3F?text=AI+Modeling+Visual'" alt="AI建模視覺化" class="rounded-xl shadow-custom w-full">
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- PAGP 學習歷程專區 -->
-    <section id="pagp-focus" class="section pagp-focus-section">
-        <div class="container">
-            <h2>🏆 你的數創作品如何成為升學決勝點？</h2>
-            <div class="pagp-grid">
-                <div class="pagp-item">
-                    <span class="step-num">01.</span>
-                    <h3>前瞻研究主題</h3>
-                    <p class="text-sm text-gray-400">涵蓋量子AI、數據流、矩陣代數等大學層級主題，讓你的報告深度遠超校內課綱。</p>
+    <!-- 營隊亮點區塊 (Highlights) -->
+    <section id="highlights" class="section bg-white">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl font-bold text-dark-text mb-12">三大核心競爭優勢</h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Highlight 1 -->
+                <div class="p-6 rounded-lg shadow-custom hover:shadow-xl transition duration-300">
+                    <div class="w-12 h-12 flex items-center justify-center rounded-full bg-blue-100 text-primary-blue mx-auto mb-4 text-2xl font-bold">1</div>
+                    <h3 class="text-xl font-semibold mb-2 text-dark-text">【學術認證】PAGP 專案</h3>
+                    <p class="text-sm text-gray-text">成大教授認可的專題報告產出，直接強化你的學習歷程檔案。</p>
                 </div>
-                <div class="pagp-item">
-                    <span class="step-num">02.</span>
-                    <h3>完整的產出物鏈</h3>
-                    <p class="text-sm text-gray-400">成果包含 數創專題競賽報告、Oral Presentation (簡報) 錄影/檔案，素材充足。</p>
+                <!-- Highlight 2 -->
+                <div class="p-6 rounded-lg shadow-custom hover:shadow-xl transition duration-300">
+                    <div class="w-12 h-12 flex items-center justify-center rounded-full bg-cyan-100 text-accent-cyan mx-auto mb-4 text-2xl font-bold">2</div>
+                    <h3 class="text-xl font-semibold mb-2 text-dark-text">【應用實戰】前沿 AI 課題</h3>
+                    <p class="text-sm text-gray-text">從量子AI、物聯網到數據庫，親自將抽象數學應用於實務問題解決。</p>
                 </div>
-                <div class="pagp-item">
-                    <span class="step-num">03.</span>
-                    <h3>成大教授學術背書</h3>
-                    <p class="text-sm text-gray-400">結業證明由成大教授簽發，為你的數創作品提供真實、權威的學術參與證明。</p>
+                <!-- Highlight 3 -->
+                <div class="p-6 rounded-lg shadow-custom hover:shadow-xl transition duration-300">
+                    <div class="w-12 h-12 flex items-center justify-center rounded-full bg-red-100 text-red-600 mx-auto mb-4 text-2xl font-bold">3</div>
+                    <h3 class="text-xl font-semibold mb-2 text-dark-text">【頂大環境】沈浸式體驗</h3>
+                    <p class="text-sm text-gray-text">四天三夜進駐成功大學校園，全面體驗一流學府的學習氛圍與資源。</p>
                 </div>
             </div>
-            <a href="#pricing" class="cta-button secondary-cta">立即組隊，解鎖最低團報價！</a>
         </div>
     </section>
 
-    <!-- H3: 團報方案與費用區塊 (新增/更新) -->
-    <section id="pricing" class="section pricing-section">
-        <div class="container">
-            <h2 class="text-light-text mb-2">🎉 鎖定你的夢幻隊伍！</h2>
-            <p class="text-xl text-accent mb-12 font-semibold">越早報名，折扣越多。團報 4 人以上，現省 $1,000 / 人！</p>
+    <!-- PAGP 學習歷程專區 (Why Us Focus) -->
+    <section id="pagp" class="section bg-light-bg">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl font-bold text-primary-blue mb-4">🏆 數創專題 PAGP 完整產出流程</h2>
+            <p class="text-lg mb-10 text-gray-text">我們確保你的專案不僅有深度，更能完美符合大學審查標準。</p>
+            <div class="grid md:grid-cols-3 gap-8 text-left">
+                <div class="p-6 bg-white rounded-lg shadow-custom border-t-4 border-primary-blue">
+                    <span class="text-3xl font-extrabold text-primary-blue opacity-50 block mb-2">STEP 1</span>
+                    <h3 class="text-xl font-semibold mb-2">確立高階主題</h3>
+                    <p class="text-sm text-gray-700">選擇大學科系感興趣的前瞻主題，確保專案具備足夠的鑑別度與學術性。</p>
+                </div>
+                <div class="p-6 bg-white rounded-lg shadow-custom border-t-4 border-accent-cyan">
+                    <span class="text-3xl font-extrabold text-accent-cyan opacity-50 block mb-2">STEP 2</span>
+                    <h3 class="text-xl font-semibold mb-2">產出學術文件</h3>
+                    <p class="text-sm text-gray-700">完成標準化的 PAGP 數創競賽報告與口頭簡報，附上成大教授簽發證明。</p>
+                </div>
+                <div class="p-6 bg-white rounded-lg shadow-custom border-t-4 border-green-600">
+                    <span class="text-3xl font-extrabold text-green-600 opacity-50 block mb-2">STEP 3</span>
+                    <h3 class="text-xl font-semibold mb-2">成果展示與反思</h3>
+                    <p class="text-sm text-gray-700">指導簡報技巧，錄製作品影片，完善反思與結論，為面試做好準備。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 課程大綱區塊 (Program) -->
+    <section id="program" class="section bg-white">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl font-bold text-dark-text mb-4">課程核心單元與時程</h2>
+            <p class="text-lg mb-10 text-gray-text">四天三夜，從理論基礎到實戰應用，完整架構你的數創思維。</p>
             
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div class="max-w-4xl mx-auto text-left space-y-4">
+                <div class="p-5 border-l-4 border-primary-blue bg-light-bg rounded-lg shadow-sm">
+                    <h3 class="text-xl font-semibold text-primary-blue">Day 1：數學建模基礎與 Python 程式導入</h3>
+                    <p class="text-sm text-gray-600 mt-1">線性代數、布林代數、Python 程式環境配置、基礎數據結構。</p>
+                </div>
+                <div class="p-5 border-l-4 border-accent-cyan bg-light-bg rounded-lg shadow-sm">
+                    <h3 class="text-xl font-semibold text-accent-cyan">Day 2：數據庫實作與 AI 數據準備</h3>
+                    <p class="text-sm text-gray-600 mt-1">SQLite 實作、數據清洗 (Pandas) 應用、數據預處理與視覺化專題。</p>
+                </div>
+                <div class="p-5 border-l-4 border-primary-blue bg-light-bg rounded-lg shadow-sm">
+                    <h3 class="text-xl font-semibold text-primary-blue">Day 3：前沿 AI 應用與專題分組</h3>
+                    <p class="text-sm text-gray-600 mt-1">量子 AI 航太應用案例、物聯網數據流建模、數創實境競賽分組與指導。</p>
+                </div>
+                <div class="p-5 border-l-4 border-accent-cyan bg-light-bg rounded-lg shadow-sm">
+                    <h3 class="text-xl font-semibold text-accent-cyan">Day 4：成果發表與認證</h3>
+                    <p class="text-sm text-gray-600 mt-1">Oral Presentation 競賽、教授講評、結業典禮、正式晚宴 (BANQUET)。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- H4: 團報方案與費用區塊 (Pricing and Group Enrollment) -->
+    <section id="pricing" class="section bg-light-bg">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl font-bold text-dark-text mb-4">💰 費用方案：鼓勵團報，共組夢幻隊伍</h2>
+            <p class="text-xl font-semibold text-red-600 mb-12">
+                每人最高現省 NT$ 1,000！找到你的隊友，共同組隊報名！
+            </p>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pricing-grid">
                 
                 <!-- 價格卡片 1: 4人以上 (BEST DEAL) -->
-                <div class="price-card best-deal">
-                    <div class="ribbon">最高優惠</div>
-                    <h3 class="text-2xl font-bold mb-2 text-primary">👑 4 人以上團報</h3>
-                    <p class="text-sm old-price">原價 $5800/人</p>
-                    <div class="price-text text-5xl">NT$ 4,800</div>
-                    <p class="text-sm mb-4">/ 人 (含餐點、教材、保險)</p>
-                    <p class="text-gray-400 text-sm mt-3">✅ 競賽隊伍已成形，免除分組煩惱！</p>
-                    <p class="text-gray-400 text-sm">✅ **每人現省 $1,000！**</p>
+                <div class="price-card best-deal p-6 rounded-xl">
+                    <div class="absolute top-0 right-0 bg-primary-blue text-white text-xs font-bold px-4 py-1 rounded-bl-lg">最高優惠</div>
+                    <h3 class="text-xl font-bold mb-3 mt-2 text-primary-blue">👑 4 人以上團報</h3>
+                    <p class="text-sm text-gray-400 line-through">單人原價 NT$ 5800</p>
+                    <div class="price-text text-5xl">4,800</div>
+                    <p class="text-sm mb-4 text-dark-text font-bold">NT$ / 人</p>
+                    <p class="text-xs text-green-600 font-semibold">✅ 競賽隊伍已成形，每人省 $1,000</p>
+                    <a href="https://forms.gle/kK6SNVtYb5uUNRvs6" target="_blank" class="mt-4 cta-button bg-primary-blue text-white w-full block">立即鎖定</a>
                 </div>
 
                 <!-- 價格卡片 2: 3人 -->
-                <div class="price-card">
-                    <h3 class="text-2xl font-bold mb-2">3 人團報</h3>
-                    <p class="text-sm old-price">原價 $5800/人</p>
-                    <div class="price-text">NT$ 5,000</div>
-                    <p class="text-sm mb-4">/ 人 (含餐點、教材、保險)</p>
-                    <p class="text-gray-400 text-sm mt-3">✅ 組隊彈性高，省下 $800/人。</p>
+                <div class="price-card p-6 rounded-xl">
+                    <h3 class="text-xl font-bold mb-3 text-dark-text">3 人團報</h3>
+                    <p class="text-sm text-gray-400 line-through">單人原價 NT$ 5800</p>
+                    <div class="price-text">5,000</div>
+                    <p class="text-sm mb-4 text-dark-text font-bold">NT$ / 人</p>
+                    <p class="text-xs text-gray-600">✅ 組隊彈性高，省 $800/人</p>
+                    <a href="https://forms.gle/kK6SNVtYb5uUNRvs6" target="_blank" class="mt-4 cta-button bg-gray-200 text-dark-text hover:bg-gray-300 w-full block">前往報名</a>
                 </div>
 
                 <!-- 價格卡片 3: 2人 -->
-                <div class="price-card">
-                    <h3 class="text-2xl font-bold mb-2">2 人團報</h3>
-                    <p class="text-sm old-price">原價 $5800/人</p>
-                    <div class="price-text">NT$ 5,400</div>
-                    <p class="text-sm mb-4">/ 人 (含餐點、教材、保險)</p>
-                    <p class="text-gray-400 text-sm mt-3">✅ 輕鬆找到隊友，省下 $400/人。</p>
+                <div class="price-card p-6 rounded-xl">
+                    <h3 class="text-xl font-bold mb-3 text-dark-text">2 人團報</h3>
+                    <p class="text-sm text-gray-400 line-through">單人原價 NT$ 5800</p>
+                    <div class="price-text">5,400</div>
+                    <p class="text-sm mb-4 text-dark-text font-bold">NT$ / 人</p>
+                    <p class="text-xs text-gray-600">✅ 兩人同行，省 $400/人</p>
+                    <a href="https://forms.gle/kK6SNVtYb5uUNRvs6" target="_blank" class="mt-4 cta-button bg-gray-200 text-dark-text hover:bg-gray-300 w-full block">前往報名</a>
                 </div>
 
                 <!-- 價格卡片 4: 單人 -->
-                <div class="price-card">
-                    <h3 class="text-2xl font-bold mb-2">單人報名</h3>
-                    <div class="price-text">NT$ 5,800</div>
-                    <p class="text-sm mb-4">/ 人 (含餐點、教材、保險)</p>
-                    <p class="text-gray-400 text-sm mt-3">✅ 主辦單位協助分配競賽隊伍。</p>
+                <div class="price-card p-6 rounded-xl">
+                    <h3 class="text-xl font-bold mb-3 text-dark-text">單人報名</h3>
+                    <p class="text-sm text-white opacity-0">Placeholder</p>
+                    <div class="price-text">5,800</div>
+                    <p class="text-sm mb-4 text-dark-text font-bold">NT$ / 人</p>
+                    <p class="text-xs text-gray-600">✅ 主辦單位協助分配隊伍</p>
+                    <a href="https://forms.gle/kK6SNVtYb5uUNRvs6" target="_blank" class="mt-4 cta-button bg-gray-200 text-dark-text hover:bg-gray-300 w-full block">前往報名</a>
                 </div>
             </div>
             
             <!-- 住宿選項 -->
-            <div class="grid grid-cols-1 mt-10">
-                <div class="accommodation-card p-6 rounded-lg shadow-xl md:col-span-4 lg:col-span-4">
-                    <div class="flex flex-col md:flex-row items-center justify-between">
-                        <div class="text-left mb-4 md:mb-0">
-                            <h3 class="text-2xl font-bold text-accent">🏠 四天三夜住宿選項：</h3>
-                            <p class="text-lg text-light-text font-bold">每人額外加收 NT$ 1,500 元</p>
-                        </div>
-                        <div class="text-left md:text-right">
-                            <p class="text-gray-300">包含：**成大校區宿舍床位** (統一管理) 與 **每日精緻早餐**。</p>
-                            <p class="text-gray-400 text-sm mt-1">請在報名系統中勾選住宿選項。 (不含住宿者需自行處理早晚餐與交通)</p>
-                        </div>
+            <div class="mt-10 p-6 rounded-xl accommodation-card shadow-custom max-w-4xl mx-auto">
+                <div class="flex flex-col md:flex-row items-center justify-between">
+                    <div class="text-left mb-4 md:mb-0">
+                        <h3 class="text-2xl font-bold text-green-700">🏠 住宿選項：四天三夜全程進駐</h3>
+                        <p class="text-lg text-dark-text font-bold mt-1">每人額外加收 NT$ 1,500 元</p>
+                    </div>
+                    <div class="text-left md:text-right">
+                        <p class="text-gray-700">包含：成大校區宿舍床位 (統一管理) 與 **每日精緻早餐**。</p>
+                        <p class="text-gray-500 text-sm mt-1">請在報名系統中勾選住宿。不含住宿者需自行處理早晚餐與交通。</p>
                     </div>
                 </div>
             </div>
 
-            <a href="https://forms.gle/kK6SNVtYb5uUNRvs6" class="cta-button primary-cta mt-12">確認方案並報名</a>
         </div>
     </section>
-
-    <!-- 課程大綱區塊 (Placeholder) -->
-    <section id="program" class="section">
-        <div class="container">
-            <h2 class="text-accent">— 完整課程單元與時程 —</h2>
-            <p class="text-lg text-gray-400 mb-8">課程包含數學建模、程式實戰、前沿AI應用與專題競賽 (WBS 1.1)</p>
-            <div class="program-content bg-dark-bg p-8 rounded-xl text-left">
-                <ul class="space-y-4">
-                    <li class="border-b border-gray-700 pb-4">
-                        <h3 class="text-xl font-semibold text-accent">Day 1：數學建模基礎與 Python 程式導入</h3>
-                        <p class="text-sm text-gray-400 mt-1">線性代數、布林代數、環境配置與基礎數據結構。</p>
-                    </li>
-                    <li class="border-b border-gray-700 pb-4">
-                        <h3 class="text-xl font-semibold text-accent">Day 2：數據庫實作與 AI 數據準備</h3>
-                        <p class="text-sm text-gray-400 mt-1">SQLite 實作、數據清洗 (Pandas) 與數據預處理專題。</p>
-                    </li>
-                    <li class="border-b border-gray-700 pb-4">
-                        <h3 class="text-xl font-semibold text-accent">Day 3：前沿 AI 應用與專題分組</h3>
-                        <p class="text-sm text-gray-400 mt-1">量子 AI 航太應用、物聯網數據流建模、數創實境競賽分組與指導。</p>
-                    </li>
-                    <li class="border-b border-gray-700 pb-4">
-                        <h3 class="text-xl font-semibold text-accent">Day 4：成果發表與認證</h3>
-                        <p class="text-sm text-gray-400 mt-1">Oral Presentation 競賽、教授講評、結業典禮與正式晚宴 (BANQUET)。</p>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </section>
-
 
     <!-- FAQ 區塊 (結構與 JS 互動) -->
-    <section id="faq" class="section bg-dark-bg">
-        <div class="container max-w-3xl">
-            <h2 class="text-accent">— 常見問題解答 (FAQ) —</h2>
-            <div class="faq-list border-t border-gray-700">
+    <section id="faq" class="section bg-white">
+        <div class="container mx-auto px-4 max-w-3xl">
+            <h2 class="text-3xl font-bold text-dark-text text-center mb-10">— 常見問題解答 —</h2>
+            <div class="faq-list">
                 
                 <!-- FAQ Item 1: 升學與歷程 -->
                 <div class="faq-item">
@@ -496,7 +391,7 @@
                         <span>Q1: 參加營隊對於申請大學有實質幫助嗎？</span>
                     </button>
                     <div class="faq-answer-content">
-                        <p>（此處將填充具體回答內容，強調 PAGP 報告與成大教授背書。）</p>
+                        <p class="py-4">當然有！MATHINK營隊核心目標就是產出高含金量的學習歷程檔案（PAGP）。你將在教授指導下完成一份完整的**數創競賽報告**和**口頭簡報**，並獲得**成大教授簽發的結業證明**。這份成果能強而有力地證明你在跨領域學術上的深度參與和解決問題能力，對於申請理工、資電或商管學系都極具優勢。</p>
                     </div>
                 </div>
                 
@@ -506,37 +401,28 @@
                         <span>Q2: 課程難度如何？需要具備程式設計基礎嗎？</span>
                     </button>
                     <div class="faq-answer-content">
-                        <p>（此處將填充具體回答內容。）</p>
+                        <p class="py-4">課程內容會從基礎開始，並採取「做中學 (Learning by Doing)」的方式。雖然課程主題前瞻，但所有程式基礎 (Python, Pandas, SQLite) 都會從零開始帶領。只要你對數學建模、數據分析有熱忱，即使是初學者也能跟上進度。競賽中也會有輔導員隨時提供技術支援。</p>
                     </div>
                 </div>
 
                 <!-- FAQ Item 3: 住宿與生活 -->
                 <div class="faq-item">
                     <button class="faq-question">
-                        <span>Q3: 營隊包含住宿嗎？生活安全如何保障？</span>
+                        <span>Q3: 營隊包含住宿嗎？住宿品質如何？</span>
                     </button>
                     <div class="faq-answer-content">
-                        <p>（此處將填充具體回答內容。）</p>
+                        <p class="py-4">住宿是**選配**項目，需額外加收 NT$ 1,500 元。費用包含四天三夜的**成大校區宿舍床位**（需遵守校方規定統一住宿管理）以及**每日豐盛早餐**。選擇住宿可以讓你全程沉浸在大學環境中，省去通勤時間，更專注於團隊專案。</p>
                     </div>
                 </div>
 
                 <!-- FAQ Item 4: 費用與退費 -->
                 <div class="faq-item">
                     <button class="faq-question">
-                        <span>Q4: 營隊費用包含哪些項目？是否有退費機制？</span>
+                        <span>Q4: 營隊費用包含哪些項目？團報如何操作？</span>
                     </button>
                     <div class="faq-answer-content">
-                        <p>（此處將填充具體回答內容。）</p>
-                    </div>
-                </div>
-                
-                <!-- 更多 FAQ 項目 (Placeholder) -->
-                <div class="faq-item">
-                    <button class="faq-question">
-                        <span>Q5: 營隊最終的成果產出形式是什麼？</span>
-                    </button>
-                    <div class="faq-answer-content">
-                        <p>（此處將填充具體回答內容。）</p>
+                        <p class="py-4">費用包含：**所有課程費用、專業講義教材、保險費**，以及**三日午晚餐**。住宿為選配，需加收 $1,500 元（含每日早餐）。<br>
+                        團報操作非常簡單：只要由**一位團長**負責填寫 Google 表單，並註明所有團員姓名即可享有折扣。請注意，團報人數需一致，且需一次性繳費。</p>
                     </div>
                 </div>
                 
@@ -544,15 +430,18 @@
         </div>
     </section>
 
-    <!-- Footer / Registration 區塊 -->
-    <footer id="register" class="bg-primary border-t border-accent border-opacity-30 py-10">
-        <div class="container text-center">
-            <h3 class="text-xl font-bold mb-4 text-accent">立即組隊加入，鎖定你的升學優勢與最低價！</h3>
-            <!-- 最終費用總結更新 -->
-            <p class="text-md text-gray-400 mb-6">單人價 NT$ 5,800 元起，團報最低可享 NT$ 4,800 元優惠。</p>
-            <!-- 連結更新至 Google Form -->
-            <a href="https://forms.gle/kK6SNVtYb5uUNRvs6" target="_blank" class="cta-button primary-cta">🔥 點此進入團報報名系統</a>
-            <p class="text-xs text-gray-500 mt-8">主辦單位：成功大學數學系及相關科系 | 聯絡信箱：</p>
+    <!-- Footer / 聯絡資訊 -->
+    <footer id="contact" class="bg-primary-blue py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h3 class="text-2xl font-bold mb-4 text-white">別讓你的熱情等待！</h3>
+            <p class="text-md text-blue-200 mb-6">現在是組隊報名，享受最高優惠的最後機會！</p>
+            <a href="https://forms.gle/kK6SNVtYb5uUNRvs6" target="_blank" class="cta-button bg-accent-cyan text-primary-blue hover:bg-white text-lg font-bold">
+                立即進入報名系統
+            </a>
+            <div class="mt-8 text-sm text-blue-300">
+                <p>主辦單位：成功大學數學系及相關科系</p>
+                <p>聯絡信箱：mathink@ncku.edu.tw | 電話：(06) 275-xxxx</p>
+            </div>
         </div>
     </footer>
 
@@ -560,21 +449,15 @@
     <!-- --- JAVASCRIPT 互動邏輯 (FAQ Accordion) --- -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // 獲取所有帶有 'faq-question' class 的按鈕 (問題標題)
             const faqQuestions = document.querySelectorAll('.faq-question');
 
             faqQuestions.forEach(question => {
                 question.addEventListener('click', function() {
-                    // 1. 取得當前問題按鈕的父元素 (整個 faq-item)
                     const faqItem = this.closest('.faq-item');
-                    
-                    // 2. 取得要切換顯示狀態的元素 (答案內容)
                     const answer = faqItem.querySelector('.faq-answer-content');
-                    
-                    // 3. 檢查答案區塊目前是否處於展開狀態
                     const isExpanded = answer.style.maxHeight && answer.style.maxHeight !== '0px';
 
-                    // 4. 先收合所有已展開的答案，確保每次只打開一個
+                    // 1. 收合所有已展開的答案
                     faqQuestions.forEach(q => {
                         const otherAnswer = q.closest('.faq-item').querySelector('.faq-answer-content');
                         q.classList.remove('active');
@@ -583,12 +466,13 @@
                         otherAnswer.style.paddingBottom = '0';
                     });
                     
-                    // 5. 如果當前點擊的不是已展開的項目，則展開它
+                    // 2. 如果當前點擊的不是已展開的項目，則展開它
                     if (!isExpanded) {
                         this.classList.add('active');
+                        // 使用 scrollHeight 讓高度自適應
                         answer.style.maxHeight = answer.scrollHeight + 'px';
-                        answer.style.paddingTop = '10px';
-                        answer.style.paddingBottom = '20px';
+                        answer.style.paddingTop = '16px';
+                        answer.style.paddingBottom = '16px';
                     }
                 });
             });
