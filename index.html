@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
@@ -8,12 +7,128 @@
     <!-- 引入 Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    
+    <!-- 引入 Firebase 相關模組 -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, updateDoc, increment, onSnapshot, FieldValue, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        
+        // 設定 Firebase Debug 日誌
+        setLogLevel('Debug');
+
+        // 檢查並解析全域變數
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        let firebaseConfig = {};
+        try {
+            firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+        } catch (e) {
+            console.error("Firebase config parsing error:", e);
+        }
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        let db, auth;
+
+        /**
+         * 初始化 Firebase, 進行認證, 並設置瀏覽次數監聽器
+         */
+        async function setupFirebaseAndAnalytics() {
+            try {
+                if (Object.keys(firebaseConfig).length === 0) {
+                    throw new Error("Firebase config is missing or invalid.");
+                }
+                
+                // 初始化 Firebase App
+                const app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+
+                // 認證流程：使用 CustomToken 登入，若無則匿名登入
+                if (initialAuthToken) {
+                    await signInWithCustomToken(auth, initialAuthToken);
+                    console.log("Signed in with custom token.");
+                } else {
+                    await signInAnonymously(auth);
+                    console.log("Signed in anonymously.");
+                }
+
+                // 確保認證成功後再執行 Firestore 操作
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        incrementAndListenToViews();
+                    } else {
+                        console.log("User signed out, waiting for authentication.");
+                    }
+                });
+
+            } catch (error) {
+                console.error("Firebase Initialization or Auth Failed:", error);
+                document.getElementById('view-counter-status').textContent = '⚠️ Analytics 無法初始化';
+            }
+        }
+
+        /**
+         * 增加瀏覽次數並監聽即時更新
+         */
+        function incrementAndListenToViews() {
+            // 公共資料路徑：/artifacts/{appId}/public/data/analytics/view_counter
+            const viewCountRef = doc(db, 
+                `artifacts/${appId}/public/data/analytics/`, 
+                'view_counter');
+            
+            const counterElement = document.getElementById('view-counter-count');
+            const statusElement = document.getElementById('view-counter-status');
+            
+            // 1. 增加瀏覽次數
+            updateDoc(viewCountRef, { 
+                count: increment(1),
+                lastVisited: new Date().toISOString()
+            }).catch(async (error) => {
+                // 如果文件不存在，會拋出錯誤，此時應創建它
+                if (error.code === 'not-found') {
+                    await setDoc(viewCountRef, { 
+                        count: 1, 
+                        lastVisited: new Date().toISOString()
+                    });
+                    console.log("View counter created.");
+                } else {
+                    console.error("Error updating view counter:", error);
+                }
+            });
+
+            // 2. 監聽即時更新
+            const unsubscribe = onSnapshot(viewCountRef, (docSnap) => {
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    const viewCount = data.count || 0;
+                    
+                    // 更新 UI 顯示
+                    counterElement.textContent = viewCount.toLocaleString();
+                    statusElement.textContent = '✅ 即時數據更新';
+                } else {
+                    counterElement.textContent = '0';
+                    statusElement.textContent = '📝 正在建立計數器...';
+                }
+            }, (error) => {
+                console.error("Error listening to view counter:", error);
+                statusElement.textContent = '❌ 監聽失敗';
+            });
+
+            // 建議：可以在頁面卸載時取消訂閱，但在此單頁應用中非必須
+            // window.addEventListener('beforeunload', unsubscribe);
+        }
+
+        // 啟動 Firebase 服務
+        document.addEventListener('DOMContentLoaded', setupFirebaseAndAnalytics);
+    </script>
+    
     <style>
-        /* --- 1. 全局變量與基本設定 (深色科技主題) --- */
+        /* --- 1. 全局變量與主題設定 (深色科技主題 V4) --- */
         :root {
             --color-primary: #3B82F6;       /* 核心亮藍色 (Accent Blue) */
             --color-accent: #06B6D4;        /* 強調青色 (Vibrant Cyan for Glow) */
-            --color-dark-bg: #0A0A1F;       /* 主背景 (Very Dark Blue/Black) */
+            --color-dark-bg: #0A0A1F;       /* 主背景 (Very Dark Blue/Black) - 最深 */
+            --color-light-dark-bg: #101026; /* 輕微提亮背景，用於區塊交替 */
             --color-card-bg: #1A1A30;       /* 卡片背景 (Slightly Lighter Dark) */
             --color-light-text: #E5E7EB;    /* 淺色文字 */
             --color-gray-text: #9CA3AF;     /* 灰色輔助文字 */
@@ -27,6 +142,7 @@
                         'primary-blue': 'var(--color-primary)',
                         'accent-cyan': 'var(--color-accent)',
                         'dark-bg': 'var(--color-dark-bg)',
+                        'light-dark-bg': 'var(--color-light-dark-bg)', 
                         'card-bg': 'var(--color-card-bg)',
                         'light-text': 'var(--color-light-text)',
                         'gray-text': 'var(--color-gray-text)',
@@ -34,12 +150,11 @@
                     fontFamily: {
                         sans: ['Inter', 'Microsoft JhengHei', 'sans-serif'],
                     },
-                    /* 模擬科技感光暈效果 */
                     boxShadow: {
                         'glow': '0 0 10px rgba(59, 130, 246, 0.5), 0 0 20px rgba(59, 130, 246, 0.2)',
-                        'custom': '0 5px 15px rgba(0, 0, 0, 0.5)', /* 師資卡片陰影 */
+                        'custom': '0 5px 15px rgba(0, 0, 0, 0.5)',
                         'cyan-glow': '0 0 8px rgba(6, 182, 212, 0.6)',
-                        'red-glow': '0 0 8px rgba(239, 68, 68, 0.6)', /* 獎金卡片紅色光暈 */
+                        'red-glow': '0 0 8px rgba(239, 68, 68, 0.6)',
                     }
                 }
             }
@@ -51,18 +166,23 @@
             color: var(--color-light-text);
             line-height: 1.6;
             min-height: 100vh;
-            /* 全頁面的微弱斜線科技背景 */
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='%233B82F6' stroke-width='1.5' opacity='0.08'%3E%3Cpath d='M-10 10 L 90 90 M-10 30 L 70 110 M-10 50 L 50 130 M-10 70 L 30 150 M10 90 L -10 110 M30 70 L 50 90'/%3E%3C/g%3E%3C/svg%3E");
             background-attachment: fixed;
         }
 
+        /* --- NEW: 毛玻璃導航欄樣式 (Glassmorphism Navigation) --- */
+        .glass-nav {
+            background-color: rgba(10, 10, 31, 0.85); /* 85% opacity of --color-dark-bg */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px); /* 兼容 Safari */
+        }
+        
         /* 修正固定導航欄遮擋問題 */
         .section {
             position: relative;
-            /* 導航欄高度約為 68px, 設定 80px 的偏移量以確保內容可見 */
-            padding-top: 90px;  /* 實際內容從這裡開始向下推 */
-            margin-top: -68px; /* 使用負邊距將目標錨點（#id）拉回導航欄下方 */
-            padding-bottom: 80px; /* 保持底部視覺空間 */
+            padding-top: 90px; 
+            margin-top: -68px;
+            padding-bottom: 80px; 
         }
         
         /* 確保 Hero 區塊的起始位置不被影響，並提供足夠的頂部空間 */
@@ -76,7 +196,7 @@
             margin-top: 0; 
         }
 
-        /* --- 2. 導航欄與 CTA (省略) --- */
+        /* --- 其他樣式維持不變 --- */
         .cta-button {
             padding: 10px 24px;
             border-radius: 9999px;
@@ -89,7 +209,6 @@
         .primary-cta {
             background-color: var(--color-primary);
             color: var(--color-dark-bg);
-            box-shadow: var(--color-primary);
             box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4); 
         }
 
@@ -98,7 +217,6 @@
             box-shadow: 0 6px 30px rgba(59, 130, 246, 0.6);
         }
 
-        /* --- 4. 價格卡片樣式 (省略) --- */
         .price-card {
             background-color: var(--color-card-bg);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -128,7 +246,6 @@
             box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
         }
         
-        /* --- 5. FAQ 樣式 --- */
         .faq-item {
             background-color: var(--color-card-bg);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -138,7 +255,6 @@
             box-shadow: 0 0 5px rgba(59, 130, 246, 0.1);
         }
         
-        /* 調整按鈕樣式，確保文字在不同尺寸下都好看 */
         .faq-question {
             width: 100%;
             padding: 16px 24px;
@@ -158,7 +274,6 @@
             background-color: rgba(59, 130, 246, 0.1);
         }
         
-        /* 視覺指示箭頭 (維持原樣) */
         .faq-question::after {
             content: '▼';
             margin-left: 10px;
@@ -178,11 +293,7 @@
             color: var(--color-gray-text);
             border-top: 1px solid rgba(255, 255, 255, 0.05);
         }
-
-
-        /* --- 6. 課程大綱 (TABBED SCHEDULE) 專屬樣式 (省略) --- */
         
-        /* Tab 按鈕樣式 (省略) */
         .tab-button {
             flex-grow: 1;
             padding: 12px 0;
@@ -204,10 +315,9 @@
             box-shadow: 0 4px 10px rgba(6, 182, 212, 0.2);
         }
 
-        /* 每日課程項目樣式 (增加字體大小) */
         .schedule-item {
             display: grid;
-            grid-template-columns: 80px 1fr; /* 時間 | 內容 */
+            grid-template-columns: 80px 1fr; 
             gap: 16px;
             align-items: flex-start;
             padding: 16px 0;
@@ -224,30 +334,25 @@
         .schedule-time {
             font-weight: 700;
             color: var(--color-primary);
-            /* 從 1.05rem 加大到 1.2rem */
             font-size: 1.2rem; 
         }
 
         .schedule-title {
-            /* 移除 font-weight: 600; 改在 HTML 用 Tailwind font-bold */
             color: var(--color-light-text);
             margin-bottom: 4px;
         }
 
         .schedule-details {
-            /* 從 0.9rem 加大到 1.0rem */
             font-size: 1.0rem; 
             color: var(--color-gray-text);
         }
         
         .schedule-speaker {
-            /* 從 0.85rem 加大到 0.9rem */
             font-size: 0.9rem;
             color: var(--color-accent);
             font-style: italic;
         }
 
-        /* 獎勵卡片樣式 */
         .award-card {
             background-color: var(--color-card-bg);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -264,21 +369,12 @@
             transform: translateY(-5px);
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
         }
-
-        /* 響應式調整 (省略) */
-        @media (max-width: 768px) {
-            .schedule-item {
-                grid-template-columns: 70px 1fr;
-                gap: 10px;
-            }
-        }
     </style>
 </head>
-<body>
+<body class="bg-dark-bg">
 
-    <!-- 導航欄 (Navigation) -->
-    <!-- 導航欄已使用 bg-dark-bg 和 shadow-lg 確保有固定的底色和陰影，不會干擾下方內容 -->
-    <header class="sticky top-0 bg-dark-bg shadow-lg z-10 border-b border-primary-blue/30">
+    <!-- 導航欄 (Navigation) - 已套用 glass-nav 樣式實現透明液體/毛玻璃效果 -->
+    <header class="sticky top-0 shadow-lg z-10 border-b border-primary-blue/30 glass-nav">
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
             <a href="#hero" class="text-2xl font-bold text-accent-cyan hover:text-white transition">MATHINK 2026</a>
             <nav class="hidden md:flex space-x-6 text-light-text">
@@ -296,20 +392,20 @@
     </header>
 
     <!-- H1: HERO 區塊 -->
-    <section id="hero" class="hero-section">
+    <section id="hero" class="hero-section bg-dark-bg">
         <div class="container mx-auto px-4">
             <div class="grid md:grid-cols-2 gap-10 items-center">
                 <div class="hero-content">
                     <h1 class="text-4xl lg:text-5xl font-extrabold leading-tight text-light-text">
-                        從數學建模到 AI 實戰
+                        從數學建模到實戰
                         <span class="text-accent-cyan block mt-2 text-shadow-cyan" style="text-shadow: 0 0 5px rgba(6, 182, 212, 0.8);">成大 MATHINK 2026</span>
                     </h1>
                     <p class="text-lg mt-4 mb-6 text-gray-text">
-                        四天三夜，親手打造你的高含金量 PAGP 專案報告，開啟頂大入學之路。
+                        四天三夜，親手打造你的高含金量專案報告
                     </p>
                     <div class="space-y-4 sm:space-x-4 sm:space-y-0">
                         <a href="https://forms.gle/kK6SNVtYb5uUNRvs6" target="_blank" class="cta-button primary-cta">
-                            🔥 團報最低 NT$ 4,800！馬上組隊
+                            🔥 4人團報最低 NT$ 4,800！馬上組隊
                         </a>
                         <a href="#program" class="cta-button bg-card-bg text-light-text border border-gray-700 hover:bg-gray-700">
                             查看課程大綱
@@ -318,16 +414,17 @@
                 </div>
                 <div class="hidden md:block">
                     <!-- 模擬科技感的抽象圖像 -->
-                    <img src="https://scontent-tpe1-1.xx.fbcdn.net/v/t39.30808-6/577555474_122164992746602984_1242567018639499600_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=kuu1rrBdSIMQ7kNvwEawLQR&_nc_oc=AdnOXoWHaEaz7kcLUe7LCc88wOAv8VP6fD-Ezij7g5_Kffq_rT9p7FpCq-wV7QH1F1A&_nc_zt=23&_nc_ht=scontent-tpe1-1.xx&_nc_gid=FjjsMTANCW73drq3E4g1BA&oh=00_Afg-69xgWCLQHwyesg1rSihoISZc1zfC3F1Rd8SpDmMpfA&oe=691B8C66" onerror="this.src='https://placehold.co/600x400/1A1A30/3B82F6?text=AI%20Data%20Flow'" alt="AI建模視覺化" class="rounded-xl shadow-glow w-full">
+                    <img src="https://scontent-tpe1-1.xx.fbcdn.net/v/t39.30808-6/577555474_122164992746602984_1242567018639499600_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=kuu1rrBdSIMQ7kNvwEawLQR&_nc_oc=AdnOXoWHaEaz7kcLUe7LCc88wOAv8VP6fD-Ezij7g5_Kffq_rT9p7FpCq-wV7QH1F1A&_nc_zt=23&_nc_ht=scontent-tpe1-1.xx&_nc_gid=FjjsMTANCW73drq3E4g1BA&oh=00_Afg-69xgWCLQHwyesg1rSihoISZc1zfC3F1Rd8SpDmMpfA&oe=691B8C66" onerror="this.src='https://scontent-tpe1-1.xx.fbcdn.net/v/t39.30808-6/577555474_122164992746602984_1242567018639499600_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=kuu1rrBdSIMQ7kNvwEawLQR&_nc_oc=AdnOXoWHaEaz7kcLUe7LCc88wOAv8VP6fD-Ezij7g5_Kffq_rT9p7FpCq-wV7QH1F1A&_nc_zt=23&_nc_ht=scontent-tpe1-1.xx&_nc_gid=FjjsMTANCW73drq3E4g1BA&oh=00_Afg-69xgWCLQHwyesg1rSihoISZc1zfC3F1Rd8SpDmMpfA&oe=691B8C66'" alt="AI建模視覺化" class="rounded-xl shadow-glow w-full">
                 </div>
             </div>
         </div>
     </section>
 
     <!-- 營隊資訊區塊 (Camp Information) -->
-    <section id="info" class="section bg-card-bg/50 border-t border-b border-primary-blue/30">
+    <!-- 背景色使用 light-dark-bg -->
+    <section id="info" class="section bg-light-dark-bg border-t-[12px] border-primary-blue">
         <div class="container mx-auto px-4 text-center">
-            <h2 class="text-3xl font-bold text-light-text mb-4">MATHINK 2026 營隊資訊</h2>
+            <h2 class="text-3xl font-bold text-light-text mb-4" style="text-shadow: 0 0 8px rgba(255, 255, 255, 0.2);">MATHINK 2026 營隊資訊</h2>
             <p class="text-lg mb-8 text-gray-400">MATHINK 數創營致力於培養具備數學建模能力的未來人才，透過理論與實作並重的課程設計，讓學員體驗數學在現實世界的應用。</p>
             
             <div class="grid md:grid-cols-4 gap-6 text-left p-6 rounded-xl bg-card-bg shadow-xl">
@@ -376,9 +473,10 @@
     </section>
 
     <!-- 營隊亮點區塊 (Highlights) -->
-    <section id="highlights" class="section bg-dark-bg">
+    <!-- 背景色使用 dark-bg -->
+    <section id="highlights" class="section bg-dark-bg border-t-[12px] border-accent-cyan">
         <div class="container mx-auto px-4 text-center">
-            <h2 class="text-3xl font-bold text-light-text mb-12">三大核心競爭優勢</h2>
+            <h2 class="text-3xl font-bold text-light-text mb-12" style="text-shadow: 0 0 8px rgba(6, 182, 212, 0.4);">三大核心競爭優勢</h2>
             <div class="grid md:grid-cols-3 gap-8">
                 <!-- Highlight 1 -->
                 <div class="p-6 rounded-lg bg-card-bg shadow-glow border border-primary-blue/50 hover:shadow-cyan-glow transition duration-300">
@@ -403,9 +501,10 @@
     </section>
 
     <!-- PAGP 學習歷程專區 (Why Us Focus) -->
-    <section id="pagp" class="section bg-card-bg border-t border-b border-white/5">
+    <!-- 背景色使用 light-dark-bg -->
+    <section id="pagp" class="section bg-light-dark-bg border-t-[12px] border-green-500">
         <div class="container mx-auto px-4 text-center">
-            <h2 class="text-3xl font-bold text-primary-blue mb-4">🏆 數創專題 PAGP 完整產出流程</h2>
+            <h2 class="text-3xl font-bold text-primary-blue mb-4" style="text-shadow: 0 0 8px rgba(59, 130, 246, 0.4);">🏆 數創專題 PAGP 完整產出流程</h2>
             <p class="text-lg mb-10 text-gray-text">我們確保你的專案不僅有深度，更能完美符合大學審查標準。</p>
             <div class="grid md:grid-cols-3 gap-8 text-left">
                 <div class="p-6 bg-dark-bg rounded-lg shadow-xl border-t-4 border-primary-blue hover:shadow-glow transition duration-300">
@@ -428,18 +527,19 @@
     </section>
     
     <!-- 豪華師資陣容區塊 (Faculty) -->
-    <section id="faculty" class="section bg-dark-bg border-t border-b border-primary-blue/50">
+    <!-- 背景色使用 dark-bg -->
+    <section id="faculty" class="section bg-dark-bg border-t-[12px] border-indigo-500">
         <div class="container mx-auto px-4 text-center">
-            <h2 class="text-3xl font-bold text-accent-cyan mb-4">✨ 豪華師資陣容：成功大學教授親授</h2>
+            <h2 class="text-3xl font-bold text-accent-cyan mb-4" style="text-shadow: 0 0 8px rgba(255, 255, 255, 0.3);">✨ 豪華師資陣容：成功大學教授親授</h2>
             <p class="text-lg mb-10 text-gray-text">來自成大不同領域的頂尖學者，結合數學與最前沿的AI應用。</p>
             
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 
-                <!-- 師資卡片 1: 黃柏嶧教授 (密碼學) -->
+                <!-- 師資卡片 1: 黃柏峰教授 (密碼學) -->
                 <div class="p-6 bg-card-bg rounded-xl shadow-custom border border-accent-cyan/50 hover:shadow-cyan-glow transition duration-300">
                     <!-- 圖片佔位符，之後可替換為實際教授照片 -->
                     <img src="https://placehold.co/120x120/1A1A30/06B6D4?text=Photo%20Here" alt="黃柏峰教授照片" class="w-24 h-24 rounded-full mx-auto mb-4 border-2 border-accent-cyan object-cover">
-                    <h3 class="text-xl font-bold text-light-text">黃柏嶧 教授</h3>
+                    <h3 class="text-xl font-bold text-light-text">黃柏峰 教授</h3>
                     <p class="text-primary-blue font-semibold mb-2">數學系 | 密碼學與數論專家</p>
                     <p class="text-sm text-gray-400 min-h-20">專長領域涵蓋密碼學與數論。將帶領學員從數學核心理解現代資訊安全的基石，探索其在 AI 時代的應用。</p>
                     <p class="text-xs mt-3 text-red-400 font-semibold">授課主題：密碼學與數學</p>
@@ -494,9 +594,10 @@
     </section>
 
     <!-- 獎勵與獎金區塊 (Awards & Prizes) -->
-    <section id="awards" class="section bg-card-bg border-t border-b border-white/5">
+    <!-- 背景色使用 light-dark-bg -->
+    <section id="awards" class="section bg-light-dark-bg border-t-[12px] border-red-500">
         <div class="container mx-auto px-4 text-center">
-            <h2 class="text-3xl font-bold text-red-500 mb-4">💰 獎勵與獎金：最高總獎金 NT$ 8,000！</h2>
+            <h2 class="text-3xl font-bold text-red-500 mb-4" style="text-shadow: 0 0 8px rgba(239, 68, 68, 0.4);">💰 獎勵與獎金：最高總獎金 NT$ 8,000！</h2>
             <p class="text-lg mb-10 text-gray-text">在數學建模黑客松競賽中展現你的實力，贏取豐厚的獎金與殊榮！</p>
             
             <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-6">
@@ -561,15 +662,16 @@
     </section>
 
     <!-- 課程大綱區塊 (Program) - NEW TABBED SCHEDULE WITH UPDATED DATA -->
-    <section id="program" class="section bg-dark-bg">
+    <!-- 背景色使用 dark-bg -->
+    <section id="program" class="section bg-dark-bg border-t-[12px] border-primary-blue">
         <div class="container mx-auto px-4 text-center">
             <!-- 標題字體加大到 text-4xl -->
-            <h2 class="text-4xl font-bold text-light-text mb-4">⚡ 四日核心課程時程表</h2>
+            <h2 class="text-4xl font-bold text-light-text mb-4" style="text-shadow: 0 0 8px rgba(59, 130, 246, 0.4);">⚡ 四日核心課程時程表</h2>
             <p class="text-lg mb-10 text-gray-text">點擊下方分頁，探索每一天精彩的學習旅程。 (課程內容已依據最新課表更新)</p>
             
             <div class="max-w-4xl mx-auto text-left">
-                <!-- Tab Navigations: CSS 已確保其位置和外觀 -->
-                <div class="flex border-b border-primary-blue/30 mb-8 sticky top-[68px] bg-dark-bg z-[5] shadow-xl">
+                <!-- Tab Navigations: 背景色使用 light-dark-bg，使其與 dark-bg 內容區隔 -->
+                <div class="flex border-b border-primary-blue/30 mb-8 sticky top-[68px] bg-light-dark-bg z-[5] shadow-xl">
                     <button class="tab-button active" data-tab="day1">Day 1 (1/28)</button>
                     <button class="tab-button" data-tab="day2">Day 2 (1/29)</button>
                     <button class="tab-button" data-tab="day3">Day 3 (1/30)</button>
@@ -753,9 +855,10 @@
     </section>
     
     <!-- H4: 團報方案與費用區塊 (Pricing and Group Enrollment) -->
-    <section id="pricing" class="section bg-card-bg border-t border-b border-white/5">
+    <!-- 背景色使用 light-dark-bg -->
+    <section id="pricing" class="section bg-light-dark-bg border-t-[12px] border-yellow-500">
         <div class="container mx-auto px-4 text-center">
-            <h2 class="text-3xl font-bold text-light-text mb-4">💰 費用方案：鼓勵團報，共組夢幻隊伍</h2>
+            <h2 class="text-3xl font-bold text-light-text mb-4" style="text-shadow: 0 0 8px rgba(255, 255, 255, 0.3);">💰 費用方案：鼓勵團報，共組夢幻隊伍</h2>
             <p class="text-xl font-semibold text-red-500 mb-12">
                 每人最高現省 NT$ 1,000！找到你的隊友，共同組隊報名！
             </p>
@@ -822,9 +925,10 @@
     </section>
 
     <!-- FAQ 區塊 (結構與 JS 互動) -->
-    <section id="faq" class="section bg-dark-bg">
+    <!-- 背景色使用 dark-bg -->
+    <section id="faq" class="section bg-dark-bg border-t-[12px] border-accent-cyan">
         <div class="container mx-auto px-4 max-w-3xl">
-            <h2 class="text-3xl font-bold text-light-text text-center mb-10">— 常見問題解答 —</h2>
+            <h2 class="text-3xl font-bold text-light-text text-center mb-10" style="text-shadow: 0 0 8px rgba(6, 182, 212, 0.4);">— 常見問題解答 —</h2>
             <div class="faq-list">
                 
                 <!-- FAQ Item 1: 升學與歷程 -->
@@ -881,16 +985,31 @@
     </section>
 
     <!-- Footer / 聯絡資訊 -->
-    <footer id="contact" class="bg-card-bg py-10 border-t border-primary-blue/30">
+    <!-- 背景色使用 light-dark-bg -->
+    <footer id="contact" class="bg-light-dark-bg py-10 border-t border-primary-blue/30">
         <div class="container mx-auto px-4 text-center">
             <h3 class="text-2xl font-bold mb-4 text-primary-blue">別讓你的熱情等待！</h3>
             <p class="text-md text-gray-400 mb-6">現在是組隊報名，享受最高優惠的最後機會！</p>
             <a href="https://forms.gle/kK6SNVtYb5uUNRvs6" target="_blank" class="cta-button bg-accent-cyan text-dark-bg hover:bg-white text-lg font-bold shadow-cyan-glow">
                 立即進入報名系統
             </a>
-            <div class="mt-8 text-sm text-gray-500">
-                <p>主辦單位：成功大學數學系</p>
-                <p>聯絡信箱：<span class="text-primary-blue">ircm@ncku.edu.tw</span> | 電話：06-2757575</p>
+            
+            <!-- 管理員瀏覽次數區塊 -->
+            <div class="mt-8 pt-4 border-t border-gray-700 text-sm text-gray-500">
+                <p class="text-light-text font-bold mb-2">📊 [管理員專區] 網站總瀏覽次數</p>
+                <div class="flex justify-center items-center space-x-2">
+                    <div id="view-counter-count" class="text-3xl font-extrabold text-red-400 animate-pulse">
+                        ...
+                    </div>
+                    <p class="text-sm text-gray-400" id="view-counter-status">
+                        正在載入數據...
+                    </p>
+                </div>
+            </div>
+            
+            <div class="mt-4 text-sm text-gray-500">
+                <p>主辦單位：成功大學數學系及相關科系</p>
+                <p>聯絡信箱：<span class="text-primary-blue">mathink@ncku.edu.tw</span> | 電話：(06) 275-xxxx</p>
             </div>
         </div>
     </footer>
@@ -899,7 +1018,7 @@
     <!-- --- JAVASCRIPT 互動邏輯 --- -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // --- FAQ Accordion Logic (與上次相同) ---
+            // --- FAQ Accordion Logic (維持不變) ---
             const faqQuestions = document.querySelectorAll('.faq-question');
 
             faqQuestions.forEach(question => {
@@ -926,7 +1045,7 @@
                 });
             });
 
-            // --- Program Tab Logic (新增) ---
+            // --- Program Tab Logic (維持不變) ---
             const tabButtons = document.querySelectorAll('.tab-button');
             const tabContents = document.querySelectorAll('.tab-content');
 
@@ -963,6 +1082,8 @@
 
             // 初始顯示 Day 1
             showTab('day1'); 
+            
+            // Firebase Analytics Logic 在 Type="module" Script 中處理
         });
     </script>
 </body>
