@@ -8,120 +8,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
     
-    <!-- 引入 Firebase 相關模組 -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, updateDoc, increment, onSnapshot, FieldValue, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        
-        // 設定 Firebase Debug 日誌
-        setLogLevel('Debug');
-
-        // 檢查並解析全域變數
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        let firebaseConfig = {};
-        try {
-            firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
-        } catch (e) {
-            console.error("Firebase config parsing error:", e);
-        }
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-
-        let db, auth;
-
-        /**
-         * 初始化 Firebase, 進行認證, 並設置瀏覽次數監聽器
-         */
-        async function setupFirebaseAndAnalytics() {
-            try {
-                if (Object.keys(firebaseConfig).length === 0) {
-                    throw new Error("Firebase config is missing or invalid.");
-                }
-                
-                // 初始化 Firebase App
-                const app = initializeApp(firebaseConfig);
-                db = getFirestore(app);
-                auth = getAuth(app);
-
-                // 認證流程：使用 CustomToken 登入，若無則匿名登入
-                if (initialAuthToken) {
-                    await signInWithCustomToken(auth, initialAuthToken);
-                    console.log("Signed in with custom token.");
-                } else {
-                    await signInAnonymously(auth);
-                    console.log("Signed in anonymously.");
-                }
-
-                // 確保認證成功後再執行 Firestore 操作
-                onAuthStateChanged(auth, (user) => {
-                    if (user) {
-                        incrementAndListenToViews();
-                    } else {
-                        console.log("User signed out, waiting for authentication.");
-                    }
-                });
-
-            } catch (error) {
-                console.error("Firebase Initialization or Auth Failed:", error);
-                document.getElementById('view-counter-status').textContent = '⚠️ Analytics 無法初始化';
-            }
-        }
-
-        /**
-         * 增加瀏覽次數並監聽即時更新
-         */
-        function incrementAndListenToViews() {
-            // 公共資料路徑：/artifacts/{appId}/public/data/analytics/view_counter
-            const viewCountRef = doc(db, 
-                `artifacts/${appId}/public/data/analytics/`, 
-                'view_counter');
-            
-            const counterElement = document.getElementById('view-counter-count');
-            const statusElement = document.getElementById('view-counter-status');
-            
-            // 1. 增加瀏覽次數
-            updateDoc(viewCountRef, { 
-                count: increment(1),
-                lastVisited: new Date().toISOString()
-            }).catch(async (error) => {
-                // 如果文件不存在，會拋出錯誤，此時應創建它
-                if (error.code === 'not-found') {
-                    await setDoc(viewCountRef, { 
-                        count: 1, 
-                        lastVisited: new Date().toISOString()
-                    });
-                    console.log("View counter created.");
-                } else {
-                    console.error("Error updating view counter:", error);
-                }
-            });
-
-            // 2. 監聽即時更新
-            const unsubscribe = onSnapshot(viewCountRef, (docSnap) => {
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    const viewCount = data.count || 0;
-                    
-                    // 更新 UI 顯示
-                    counterElement.textContent = viewCount.toLocaleString();
-                    statusElement.textContent = '✅ 即時數據更新';
-                } else {
-                    counterElement.textContent = '0';
-                    statusElement.textContent = '📝 正在建立計數器...';
-                }
-            }, (error) => {
-                console.error("Error listening to view counter:", error);
-                statusElement.textContent = '❌ 監聽失敗';
-            });
-
-            // 建議：可以在頁面卸載時取消訂閱，但在此單頁應用中非必須
-            // window.addEventListener('beforeunload', unsubscribe);
-        }
-
-        // 啟動 Firebase 服務
-        document.addEventListener('DOMContentLoaded', setupFirebaseAndAnalytics);
-    </script>
-    
     <style>
         /* --- 1. 全局變量與主題設定 (深色科技主題 V4) --- */
         :root {
@@ -397,15 +283,15 @@
             <div class="grid md:grid-cols-2 gap-10 items-center">
                 <div class="hero-content">
                     <h1 class="text-4xl lg:text-5xl font-extrabold leading-tight text-light-text">
-                        從數學建模到實戰
+                        從數學建模到 AI 實戰
                         <span class="text-accent-cyan block mt-2 text-shadow-cyan" style="text-shadow: 0 0 5px rgba(6, 182, 212, 0.8);">成大 MATHINK 2026</span>
                     </h1>
                     <p class="text-lg mt-4 mb-6 text-gray-text">
-                        四天三夜，親手打造你的高含金量專案報告
+                        四天三夜，親手打造你的高含金量 PAGP 專案報告，開啟頂大入學之路。
                     </p>
                     <div class="space-y-4 sm:space-x-4 sm:space-y-0">
                         <a href="https://forms.gle/kK6SNVtYb5uUNRvs6" target="_blank" class="cta-button primary-cta">
-                            🔥 4人團報最低 NT$ 4,800！馬上組隊
+                            🔥 團報最低 NT$ 4,800！馬上組隊
                         </a>
                         <a href="#program" class="cta-button bg-card-bg text-light-text border border-gray-700 hover:bg-gray-700">
                             查看課程大綱
@@ -414,7 +300,7 @@
                 </div>
                 <div class="hidden md:block">
                     <!-- 模擬科技感的抽象圖像 -->
-                    <img src="https://scontent-tpe1-1.xx.fbcdn.net/v/t39.30808-6/577555474_122164992746602984_1242567018639499600_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=kuu1rrBdSIMQ7kNvwEawLQR&_nc_oc=AdnOXoWHaEaz7kcLUe7LCc88wOAv8VP6fD-Ezij7g5_Kffq_rT9p7FpCq-wV7QH1F1A&_nc_zt=23&_nc_ht=scontent-tpe1-1.xx&_nc_gid=FjjsMTANCW73drq3E4g1BA&oh=00_Afg-69xgWCLQHwyesg1rSihoISZc1zfC3F1Rd8SpDmMpfA&oe=691B8C66" onerror="this.src='https://scontent-tpe1-1.xx.fbcdn.net/v/t39.30808-6/577555474_122164992746602984_1242567018639499600_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=kuu1rrBdSIMQ7kNvwEawLQR&_nc_oc=AdnOXoWHaEaz7kcLUe7LCc88wOAv8VP6fD-Ezij7g5_Kffq_rT9p7FpCq-wV7QH1F1A&_nc_zt=23&_nc_ht=scontent-tpe1-1.xx&_nc_gid=FjjsMTANCW73drq3E4g1BA&oh=00_Afg-69xgWCLQHwyesg1rSihoISZc1zfC3F1Rd8SpDmMpfA&oe=691B8C66'" alt="AI建模視覺化" class="rounded-xl shadow-glow w-full">
+                    <img src="https://placehold.co/600x400/1A1A30/3B82F6?text=AI%20Data%20Flow" onerror="this.src='https://placehold.co/600x400/1A1A30/3B82F6?text=AI%20Data%20Flow'" alt="AI建模視覺化" class="rounded-xl shadow-glow w-full">
                 </div>
             </div>
         </div>
@@ -539,7 +425,7 @@
                 <div class="p-6 bg-card-bg rounded-xl shadow-custom border border-accent-cyan/50 hover:shadow-cyan-glow transition duration-300">
                     <!-- 圖片佔位符，之後可替換為實際教授照片 -->
                     <img src="https://placehold.co/120x120/1A1A30/06B6D4?text=Photo%20Here" alt="黃柏峰教授照片" class="w-24 h-24 rounded-full mx-auto mb-4 border-2 border-accent-cyan object-cover">
-                    <h3 class="text-xl font-bold text-light-text">黃柏嶧 教授</h3>
+                    <h3 class="text-xl font-bold text-light-text">黃柏峰 教授</h3>
                     <p class="text-primary-blue font-semibold mb-2">數學系 | 密碼學與數論專家</p>
                     <p class="text-sm text-gray-400 min-h-20">專長領域涵蓋密碼學與數論。將帶領學員從數學核心理解現代資訊安全的基石，探索其在 AI 時代的應用。</p>
                     <p class="text-xs mt-3 text-red-400 font-semibold">授課主題：密碼學與數學</p>
@@ -584,7 +470,7 @@
                 <!-- 師資卡片 6: 彭勇豪教授 (綜合指導) -->
                 <div class="p-6 bg-card-bg rounded-xl shadow-custom border border-primary-blue/50 hover:shadow-glow transition duration-300">
                     <img src="https://placehold.co/120x120/1A1A30/3B82F6?text=Photo%20Here" alt="彭勇豪教授照片" class="w-24 h-24 rounded-full mx-auto mb-4 border-2 border-primary-blue object-cover">
-                    <h3 class="text-xl font-bold text-light-text">彭勇寧 教授</h3>
+                    <h3 class="text-xl font-bold text-light-text">彭勇豪 教授</h3>
                     <p class="text-primary-blue font-semibold mb-2">數學系 | 營隊綜合指導</p>
                     <p class="text-sm text-gray-400 min-h-20">營隊專案與課程的綜合指導教授，負責協調課程與競賽進度，確保學術成果的連貫性與深度。</p>
                     <p class="text-xs mt-3 text-red-400 font-semibold">授課主題：綜合討論與教授指導</p>
@@ -812,49 +698,14 @@
                             <div class="schedule-time">9:00 - 10:30</div>
                             <div>
                                 <div class="schedule-title text-primary-blue text-lg font-bold">專題講座：密碼學與數學</div>
-                                <div class="schedule-details">成大數學系 / 黃柏                               <div class="schedule-title text-lg font-bold">自由活動</div>
-                            </div>
-                        </div>
-                        <div class="schedule-item">
-                            <div class="schedule-time">12:00 - 13:30</div>
-                            <div>
-                                <div class="schedule-title text-lg font-bold">午休 & 午餐</div>
-                            </div>
-                        </div>
-                        <div class="schedule-item">
-                            <div class="schedule-time">13:30 - 17:00</div>
-                            <div>
-                                <div class="schedule-title text-accent-cyan text-lg font-bold">數學建模黑客松 (上機實作)</div>
-                                <div class="schedule-details">成大地科系 / 劉厚均教授 / 專案優化指導。</div>
-                            </div>
-                        </div>
-                        <div class="schedule-item">
-                            <div class="schedule-time">17:00 - 19:00</div>
-                            <div>
-                                <div class="schedule-title text-red-500 font-bold text-lg">🎓 BANQUET 正式晚宴 (預定)</div>
-                                <div class="schedule-details">交換名片與正式社交時間。</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Tab Content: Day 4 (1/31) - 結業 -->
-                <div class="tab-content hidden" id="day4">
-                    <div class="p-4 bg-card-bg/20 rounded-lg shadow-lg">
-                        <h3 class="text-xl font-bold text-accent-cyan mb-4">Day 4 (1/31 六) - 結業：展示與賦歸</h3>
-
-                        <div class="schedule-item">
-                            <div class="schedule-time">9:00 - 10:30</div>
-                            <div>
-                                <div class="schedule-title text-primary-blue text-lg font-bold">專題講座：密碼學與數學</div>
-                                <div class="schedule-details">成大數學系 / 黃柏嶧教授 / 課名：密碼學與數學。</div>
+                                <div class="schedule-details">成大數學系 / 黃柏峰教授 / 課名：密碼學與數學。</div>
                             </div>
                         </div>
                         <div class="schedule-item">
                             <div class="schedule-time">10:50 - 11:50</div>
                             <div>
                                 <div class="schedule-title text-accent-cyan text-lg font-bold">綜合討論與教授指導</div>
-                                <div class="schedule-details">主持人：成大數學系 / 彭勇寧教授。</div>
+                                <div class="schedule-details">主持人：成大數學系 / 彭勇豪教授。</div>
                             </div>
                         </div>
                         <div class="schedule-item">
@@ -1029,20 +880,9 @@
                 立即進入報名系統
             </a>
             
-            <!-- 管理員瀏覽次數區塊 -->
-            <div class="mt-8 pt-4 border-t border-gray-700 text-sm text-gray-500">
-            
-                    <div id="view-counter-count" class="text-3xl font-extrabold text-red-400 animate-pulse">
-                        
-                    </div>
-                    
-                    </p>
-                </div>
-            </div>
-            
             <div class="mt-4 text-sm text-gray-500">
-                <p>主辦單位：成功大學數學系</p>
-                <p>聯絡信箱：<span class="text-primary-blue">ircm@ncku.edu.tw</span>
+                <p>主辦單位：成功大學數學系及相關科系</p>
+                <p>聯絡信箱：<span class="text-primary-blue">mathink@ncku.edu.tw</span> | 電話：(06) 275-xxxx</p>
             </div>
         </div>
     </footer>
