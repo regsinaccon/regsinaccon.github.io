@@ -275,9 +275,252 @@
                 gap: 10px;
             }
         }
+
+        /* 報名截止日期橫幅 */
+        .deadline-banner {
+            background: linear-gradient(135deg, #DC2626 0%, #EF4444 100%);
+            color: white;
+            padding: 12px 0;
+            text-align: center;
+            font-weight: 700;
+            font-size: 0.95rem;
+            box-shadow: 0 2px 10px rgba(220, 38, 38, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 2px 10px rgba(220, 38, 38, 0.3); }
+            50% { box-shadow: 0 2px 20px rgba(220, 38, 38, 0.6); }
+        }
+
+        .deadline-banner a {
+            color: #FEF08A;
+            text-decoration: underline;
+            margin-left: 8px;
+        }
+
+        .deadline-banner a:hover {
+            color: white;
+        }
+
+        /* 手機版漢堡選單按鈕 */
+        .mobile-menu-button {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 8px;
+            z-index: 60;
+        }
+
+        .mobile-menu-button span {
+            width: 25px;
+            height: 3px;
+            background-color: var(--color-accent);
+            transition: all 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .mobile-menu-button.active span:nth-child(1) {
+            transform: rotate(45deg) translate(8px, 8px);
+        }
+
+        .mobile-menu-button.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-button.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
+
+        /* 手機版導航選單覆蓋層 */
+        .mobile-nav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: rgba(10, 10, 31, 0.98);
+            backdrop-filter: blur(10px);
+            z-index: 55;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transform: translateX(100%);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .mobile-nav-overlay.active {
+            transform: translateX(0);
+        }
+
+        .mobile-nav-overlay nav {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            text-align: center;
+        }
+
+        .mobile-nav-overlay nav a {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--color-light-text);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            padding: 12px 24px;
+            border-radius: 8px;
+        }
+
+        .mobile-nav-overlay nav a:hover {
+            color: var(--color-accent);
+            background-color: rgba(59, 130, 246, 0.1);
+            transform: scale(1.05);
+        }
+
+        .mobile-nav-cta {
+            margin-top: 32px;
+            padding: 14px 32px !important;
+            font-size: 1.2rem !important;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-button {
+                display: flex;
+            }
+            
+            header {
+                top: 50px;
+            }
+        }
+
+        /* Loading Animation Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: var(--color-dark-bg);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 1;
+            transition: opacity 0.5s ease-out;
+        }
+
+        .loading-overlay.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(59, 130, 246, 0.2);
+            border-top: 4px solid var(--color-accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.5);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            margin-top: 20px;
+            color: var(--color-accent);
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+        }
+
+        /* Countdown Timer Styles */
+        .countdown-container {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(6, 182, 212, 0.1));
+            border: 2px solid var(--color-accent);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 24px;
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.2);
+        }
+
+        .countdown-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--color-accent);
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .countdown-timer {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .countdown-unit {
+            text-align: center;
+            min-width: 70px;
+        }
+
+        .countdown-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--color-light-text);
+            line-height: 1;
+            text-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+        }
+
+        .countdown-label {
+            font-size: 0.85rem;
+            color: var(--color-gray-text);
+            margin-top: 4px;
+        }
+
+        /* Scroll Progress Bar */
+        .scroll-progress {
+            position: fixed;
+            top: 50px;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+            z-index: 101;
+            transition: width 0.1s ease-out;
+            box-shadow: 0 0 10px rgba(6, 182, 212, 0.6);
+        }
+
+        /* Active Navigation Link */
+        nav a.nav-active {
+            color: var(--color-accent) !important;
+            text-shadow: 0 0 8px rgba(6, 182, 212, 0.6);
+        }
     </style>
 </head>
 <body>
+
+    <!-- 報名截止倒數橫幅 -->
+    <div class="deadline-banner">
+        ⏰ 報名截止倒數中！最後機會：2026年1月3日截止 <a href="https://forms.gle/kK6SNVtYb5uUNRvs6" target="_blank">立即報名 →</a>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <div class="loading-text">MATHINK 2026 正在載入...</div>
+    </div>
+
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress" id="scrollProgress"></div>
 
     <!-- 導航欄 (Navigation) -->
     <!-- 導航欄已使用 bg-dark-bg 和 shadow-lg 確保有固定的底色和陰影，不會干擾下方內容 -->
@@ -285,6 +528,7 @@
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
             <a href="#hero" class="text-2xl font-bold text-accent-cyan hover:text-white transition">MATHINK 2026</a>
             <nav class="hidden md:flex space-x-6 text-light-text">
+
                 <a href="#info" class="hover:text-primary-blue transition">營隊資訊</a>
                 <a href="#highlights" class="hover:text-primary-blue transition">營隊特色</a>
                 <a href="#pagp" class="hover:text-primary-blue transition">PAGP專區</a>
@@ -295,6 +539,27 @@
                 <a href="#faq" class="hover:text-primary-blue transition">常見問題</a>
             </nav>
             <a href="https://forms.gle/kK6SNVtYb5uUNRvs6" target="_blank" class="cta-button primary-cta hidden sm:inline-block">立即報名</a>
+            <!-- 手機版漢堡選單按鈕 -->
+            <button class="mobile-menu-button md:hidden" id="mobileMenuBtn" aria-label="開啟選單">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+    <!-- 手機版導航選單覆蓋層 -->
+    <div class="mobile-nav-overlay" id="mobileNavOverlay">
+        <nav>
+            <a href="#info" class="mobile-nav-link">營隊資訊</a>
+            <a href="#highlights" class="mobile-nav-link">營隊特色</a>
+            <a href="#pagp" class="mobile-nav-link">PAGP專區</a>
+            <a href="#faculty" class="mobile-nav-link">豪華師資</a>
+            <a href="#awards" class="mobile-nav-link">獎勵與獎金</a>
+            <a href="#program" class="mobile-nav-link">課程大綱</a>
+            <a href="#pricing" class="mobile-nav-link">費用與團報</a>
+            <a href="#faq" class="mobile-nav-link">常見問題</a>
+            <a href="https://forms.gle/kK6SNVtYb5uUNRvs6" target="_blank" class="cta-button primary-cta mobile-nav-cta">立即報名</a>
+        </nav>
+    </div>
         </div>
     </header>
 
@@ -317,6 +582,28 @@
                         <a href="#program" class="cta-button bg-card-bg text-light-text border border-gray-700 hover:bg-gray-700">
                             查看課程大綱
                         </a>
+                    </div>
+                    <!-- Countdown Timer -->
+                    <div class="countdown-container">
+                        <div class="countdown-title">📅 報名截止倒數計時</div>
+                        <div class="countdown-timer" id="countdownTimer">
+                            <div class="countdown-unit">
+                                <div class="countdown-number" id="days">00</div>
+                                <div class="countdown-label">天</div>
+                            </div>
+                            <div class="countdown-unit">
+                                <div class="countdown-number" id="hours">00</div>
+                                <div class="countdown-label">時</div>
+                            </div>
+                            <div class="countdown-unit">
+                                <div class="countdown-number" id="minutes">00</div>
+                                <div class="countdown-label">分</div>
+                            </div>
+                            <div class="countdown-unit">
+                                <div class="countdown-number" id="seconds">00</div>
+                                <div class="countdown-label">秒</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="hidden md:block">
@@ -902,6 +1189,126 @@
     <!-- --- JAVASCRIPT 互動邏輯 --- -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // --- Mobile Menu Toggle Logic ---
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const mobileNavOverlay = document.getElementById('mobileNavOverlay');
+            const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+
+            function toggleMobileMenu() {
+                mobileMenuBtn.classList.toggle('active');
+                mobileNavOverlay.classList.toggle('active');
+                document.body.style.overflow = mobileNavOverlay.classList.contains('active') ? 'hidden' : 'auto';
+            }
+
+            if (mobileMenuBtn) {
+                mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+            }
+
+            // Close mobile menu when clicking on a nav link
+            mobileNavLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    if (mobileNavOverlay.classList.contains('active')) {
+                        toggleMobileMenu();
+                    }
+                });
+            });
+
+            // Close mobile menu when clicking outside
+            mobileNavOverlay.addEventListener('click', function(e) {
+                if (e.target === mobileNavOverlay) {
+                    toggleMobileMenu();
+                }
+            });
+
+            // --- Loading Animation Logic ---
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            
+            window.addEventListener('load', function() {
+                setTimeout(function() {
+                    loadingOverlay.classList.add('fade-out');
+                    setTimeout(function() {
+                        loadingOverlay.style.display = 'none';
+                    }, 500);
+                }, 300);
+            });
+
+            // Safety timeout in case load event doesnt fire
+            setTimeout(function() {
+                if (loadingOverlay && !loadingOverlay.classList.contains('fade-out')) {
+                    loadingOverlay.classList.add('fade-out');
+                    setTimeout(function() {
+                        loadingOverlay.style.display = 'none';
+                    }, 500);
+                }
+            }, 3000);
+
+            // --- Countdown Timer Logic ---
+            function updateCountdown() {
+                // Target: January 3, 2026, 23:59:59 Taiwan time (UTC+8)
+                const targetDate = new Date('2026-01-03T23:59:59+08:00');
+                const now = new Date();
+                const diff = targetDate - now;
+
+                if (diff <= 0) {
+                    document.getElementById('countdownTimer').innerHTML = '<div style="color: var(--color-accent); font-size: 1.2rem; text-align: center;">報名已截止</div>';
+                    return;
+                }
+
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                document.getElementById('days').textContent = String(days).padStart(2, '0');
+                document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+                document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+                document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+            }
+
+            // Update countdown immediately and then every second
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+
+            // --- Scroll Progress Bar Logic ---
+            const scrollProgress = document.getElementById('scrollProgress');
+            
+            function updateScrollProgress() {
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                const scrollPercent = (scrollTop / docHeight) * 100;
+                scrollProgress.style.width = scrollPercent + '%';
+            }
+
+            window.addEventListener('scroll', updateScrollProgress);
+
+            // --- Navigation Active State (Scrollspy) Logic ---
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('nav a[href^="#"]');
+
+            const observerOptions = {
+                root: null,
+                rootMargin: '-20% 0px -80% 0px',
+                threshold: 0
+            };
+
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // Remove active class from all nav links
+                        navLinks.forEach(link => link.classList.remove('nav-active'));
+                        
+                        // Add active class to corresponding nav link
+                        const activeLink = document.querySelector(`nav a[href="#${entry.target.id}"]`);
+                        if (activeLink) {
+                            activeLink.classList.add('nav-active');
+                        }
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all sections
+            sections.forEach(section => observer.observe(section));
+
             // --- FAQ Accordion Logic (與上次相同) ---
             const faqQuestions = document.querySelectorAll('.faq-question');
 
