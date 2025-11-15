@@ -7,6 +7,10 @@
     <!-- 引入 Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <!-- Add Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Add AOS for animations -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <style>
         /* --- 1. 全局變量與基本設定 (深色科技主題) --- */
         :root {
@@ -506,6 +510,77 @@
             color: var(--color-accent) !important;
             text-shadow: 0 0 8px rgba(6, 182, 212, 0.6);
         }
+
+        /* New: Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--color-primary);
+            color: var(--color-dark-bg);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 30px rgba(59, 130, 246, 0.6);
+        }
+
+        /* Improved Hero Image with Gradient Overlay */
+        .hero-image-container {
+            position: relative;
+        }
+
+        .hero-image-container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent, var(--color-dark-bg));
+            opacity: 0.3;
+            border-radius: 12px;
+        }
+
+        /* Enhanced Card Hover Effects */
+        .price-card:hover, .award-card:hover, .faq-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(6, 182, 212, 0.3);
+        }
+
+        /* Fix for Pricing Grid on Mobile */
+        @media (max-width: 640px) {
+            .pricing-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            }
+        }
+
+        /* Add smooth fade-in for sections */
+        .section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body>
@@ -566,7 +641,7 @@
     </header>
 
     <!-- H1: HERO 區塊 -->
-    <section id="hero" class="hero-section">
+    <section id="hero" class="hero-section" data-aos="fade-up">
         <div class="container mx-auto px-4">
             <div class="grid md:grid-cols-2 gap-10 items-center">
                 <div class="hero-content">
@@ -608,7 +683,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="hidden md:block">
+                <div class="hidden md:block hero-image-container">
                     <!-- 模擬科技感的抽象圖像 -->
                     <img src="https://placehold.co/600x400/1A1A30/3B82F6?text=AI%20Data%20Flow" onerror="this.src='https://placehold.co/600x400/1A1A30/3B82F6?text=AI%20Data%20Flow'" alt="AI建模視覺化" class="rounded-xl shadow-glow w-full">
                 </div>
@@ -617,7 +692,7 @@
     </section>
 
     <!-- 營隊資訊區塊 (Camp Information) -->
-    <section id="info" class="section bg-card-bg/50 border-t border-b border-primary-blue/30">
+    <section id="info" class="section bg-card-bg/50 border-t border-b border-primary-blue/30" data-aos="fade-up">
         <div class="container mx-auto px-4 text-center">
             <h2 class="text-3xl font-bold text-light-text mb-4">MATHINK 2026 營隊資訊</h2>
             <p class="text-lg mb-8 text-gray-400">MATHINK 數創營致力於培養具備數學建模能力的未來人才，透過理論與實作並重的課程設計，讓學員體驗數學在現實世界的應用。</p>
@@ -627,7 +702,7 @@
                 <!-- 資訊卡片 1: 營期時間 -->
                 <div class="p-4 border-l-4 border-primary-blue">
                     <div class="text-primary-blue font-bold mb-1 flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l3 3a1 1 0 001.414-1.414L10 10.586V6z" clip-rule="evenodd" /></svg>
+                        <i class="fas fa-clock h-5 w-5 mr-2"></i>
                         營期時間
                     </div>
                     <p class="text-light-text font-semibold">2026年1月28日(三)至1月31日(六)</p>
@@ -637,7 +712,7 @@
                 <!-- 資訊卡片 2: 營隊地點 -->
                 <div class="p-4 border-l-4 border-accent-cyan">
                     <div class="text-accent-cyan font-bold mb-1 flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" /></svg>
+                        <i class="fas fa-map-marker-alt h-5 w-5 mr-2"></i>
                         營隊地點
                     </div>
                     <p class="text-light-text font-semibold">國立成功大學</p>
@@ -647,7 +722,7 @@
                 <!-- 資訊卡片 3: 招生對象 -->
                 <div class="p-4 border-l-4 border-green-500">
                     <div class="text-green-500 font-bold mb-1 flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor"><path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18H4v-3a6 6 0 0112 0v3z" /></svg>
+                        <i class="fas fa-users h-5 w-5 mr-2"></i>
                         招生對象
                     </div>
                     <p class="text-light-text font-semibold">全國高中職學生</p>
@@ -657,7 +732,7 @@
                 <!-- 資訊卡片 4: 報名時程 -->
                 <div class="p-4 border-l-4 border-red-500">
                     <div class="text-red-500 font-bold mb-1 flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" /></svg>
+                        <i class="fas fa-calendar-alt h-5 w-5 mr-2"></i>
                         報名時程
                     </div>
                     <p class="text-light-text font-semibold">2025年11月至2026年1月3日(六)</p>
@@ -668,7 +743,7 @@
     </section>
 
     <!-- 營隊亮點區塊 (Highlights) -->
-    <section id="highlights" class="section bg-dark-bg">
+    <section id="highlights" class="section bg-dark-bg" data-aos="fade-up">
         <div class="container mx-auto px-4 text-center">
             <h2 class="text-3xl font-bold text-light-text mb-12">三大核心競爭優勢</h2>
             <div class="grid md:grid-cols-3 gap-8">
@@ -695,7 +770,7 @@
     </section>
 
     <!-- PAGP 學習歷程專區 (Why Us Focus) -->
-    <section id="pagp" class="section bg-card-bg border-t border-b border-white/5">
+    <section id="pagp" class="section bg-card-bg border-t border-b border-white/5" data-aos="fade-up">
         <div class="container mx-auto px-4 text-center">
             <h2 class="text-3xl font-bold text-primary-blue mb-4">🏆 數創專題 PAGP 完整產出流程</h2>
             <p class="text-lg mb-10 text-gray-text">我們確保你的專案不僅有深度，更能完美符合大學審查標準。</p>
@@ -720,7 +795,7 @@
     </section>
     
     <!-- 豪華師資陣容區塊 (Faculty) -->
-    <section id="faculty" class="section bg-dark-bg border-t border-b border-primary-blue/50">
+    <section id="faculty" class="section bg-dark-bg border-t border-b border-primary-blue/50" data-aos="fade-up">
         <div class="container mx-auto px-4 text-center">
             <h2 class="text-3xl font-bold text-accent-cyan mb-4">✨ 豪華師資陣容：成功大學教授親授</h2>
             <p class="text-lg mb-10 text-gray-text">來自成大不同領域的頂尖學者，結合數學與最前沿的AI應用。</p>
@@ -730,7 +805,7 @@
                 <!-- 師資卡片 1: 黃柏嶧教授 (密碼學) -->
                 <div class="p-6 bg-card-bg rounded-xl shadow-custom border border-accent-cyan/50 hover:shadow-cyan-glow transition duration-300">
                     <!-- 圖片佔位符，之後可替換為實際教授照片 -->
-                    <img src="https://placehold.co/120x120/1A1A30/06B6D4?text=Photo%20Here" alt="黃柏峰教授照片" class="w-24 h-24 rounded-full mx-auto mb-4 border-2 border-accent-cyan object-cover">
+                    <img src="https://placehold.co/120x120/1A1A30/06B6D4?text=Photo%20Here" alt="黃柏嶧教授照片" class="w-24 h-24 rounded-full mx-auto mb-4 border-2 border-accent-cyan object-cover">
                     <h3 class="text-xl font-bold text-light-text">黃柏嶧 教授</h3>
                     <p class="text-primary-blue font-semibold mb-2">數學系 | 密碼學與數論專家</p>
                     <p class="text-sm text-gray-400 min-h-20">專長領域涵蓋密碼學與數論。將帶領學員從數學核心理解現代資訊安全的基石，探索其在 AI 時代的應用。</p>
@@ -786,7 +861,7 @@
     </section>
 
     <!-- 獎勵與獎金區塊 (Awards & Prizes) -->
-    <section id="awards" class="section bg-card-bg border-t border-b border-white/5">
+    <section id="awards" class="section bg-card-bg border-t border-b border-white/5" data-aos="fade-up">
         <div class="container mx-auto px-4 text-center">
             <h2 class="text-3xl font-bold text-red-500 mb-4">💰 獎勵與獎金：最高總獎金 NT$ 8,000！</h2>
             <p class="text-lg mb-10 text-gray-text">在數學建模黑客松競賽中展現你的實力，贏取豐厚的獎金與殊榮！</p>
@@ -829,7 +904,7 @@
                 <div class="award-card p-4 rounded-xl border-red-400 hover:shadow-red-glow">
                     <div class="text-5xl mb-2">❤️</div>
                     <h3 class="text-lg font-bold text-red-400">最佳人氣獎</h3>
-                    <p class="text-xs text-transparent mb-2">(投票決定)</p>
+                    <p class="text-xs text-gray-400 mb-2">(投票決定)</p>
                     <p class="text-xl font-extrabold text-red-500">NT$ 500</p>
                 </div>
 
@@ -837,7 +912,7 @@
                 <div class="award-card p-4 rounded-xl border-purple-400 hover:shadow-red-glow">
                     <div class="text-5xl mb-2">💡</div>
                     <h3 class="text-lg font-bold text-purple-400">最佳創意獎</h3>
-                    <p class="text-xs text-transparent mb-2">(評審決定)</p>
+                    <p class="text-xs text-gray-400 mb-2">(評審決定)</p>
                     <p class="text-xl font-extrabold text-purple-500">NT$ 4,000</p>
                 </div>
                 
@@ -845,7 +920,7 @@
                 <div class="award-card p-4 rounded-xl border-green-500 hover:shadow-red-glow">
                     <div class="text-5xl mb-2">👨‍👩‍👧‍👦</div>
                     <h3 class="text-lg font-bold text-green-500">團體合作獎</h3>
-                    <p class="text-xs text-transparent mb-2">(團隊精神)</p>
+                    <p class="text-xs text-gray-400 mb-2">(團隊精神)</p>
                     <p class="text-xl font-extrabold text-green-500">NT$ 4,000</p>
                 </div>
             </div>
@@ -853,7 +928,7 @@
     </section>
 
     <!-- 課程大綱區塊 (Program) - NEW TABBED SCHEDULE WITH UPDATED DATA -->
-    <section id="program" class="section bg-dark-bg">
+    <section id="program" class="section bg-dark-bg" data-aos="fade-up">
         <div class="container mx-auto px-4 text-center">
             <!-- 標題字體加大到 text-4xl -->
             <h2 class="text-4xl font-bold text-light-text mb-4">⚡ 四日核心課程時程表</h2>
@@ -1045,7 +1120,7 @@
     </section>
     
     <!-- H4: 團報方案與費用區塊 (Pricing and Group Enrollment) -->
-    <section id="pricing" class="section bg-card-bg border-t border-b border-white/5">
+    <section id="pricing" class="section bg-card-bg border-t border-b border-white/5" data-aos="fade-up">
         <div class="container mx-auto px-4 text-center">
             <h2 class="text-3xl font-bold text-light-text mb-4">💰 費用方案：鼓勵團報，共組夢幻隊伍</h2>
             <p class="text-xl font-semibold text-red-500 mb-12">
@@ -1114,7 +1189,7 @@
     </section>
 
     <!-- FAQ 區塊 (結構與 JS 互動) -->
-    <section id="faq" class="section bg-dark-bg">
+    <section id="faq" class="section bg-dark-bg" data-aos="fade-up">
         <div class="container mx-auto px-4 max-w-3xl">
             <h2 class="text-3xl font-bold text-light-text text-center mb-10">— 常見問題解答 —</h2>
             <div class="faq-list">
@@ -1183,13 +1258,29 @@
             <div class="mt-8 text-sm text-gray-500">
                 <p>主辦單位：成功大學數學系</p>
                 <p>聯絡信箱：<span class="text-primary-blue">ircm@ncku.edu.tw</span> | 電話：06-2757575</p>
+                <!-- New: Social Media Links -->
+                <div class="mt-4 flex justify-center space-x-4">
+                    <a href="#" class="text-accent-cyan hover:text-primary-blue"><i class="fab fa-facebook-f text-xl"></i></a>
+                    <a href="#" class="text-accent-cyan hover:text-primary-blue"><i class="fab fa-instagram text-xl"></i></a>
+                    <a href="#" class="text-accent-cyan hover:text-primary-blue"><i class="fab fa-twitter text-xl"></i></a>
+                </div>
             </div>
         </div>
     </footer>
 
+    <!-- New: Back to Top Button -->
+    <a href="#hero" class="back-to-top" id="backToTop">
+        <i class="fas fa-arrow-up text-xl"></i>
+    </a>
 
     <!-- --- JAVASCRIPT 互動邏輯 --- -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
+        AOS.init({
+            duration: 800,
+            once: true
+        });
+
         document.addEventListener('DOMContentLoaded', function() {
             // --- Mobile Menu Toggle Logic ---
             const mobileMenuBtn = document.getElementById('mobileMenuBtn');
@@ -1375,6 +1466,29 @@
 
             // 初始顯示 Day 1
             showTab('day1'); 
+
+            // New: Back to Top Button Logic
+            const backToTop = document.getElementById('backToTop');
+            window.addEventListener('scroll', () => {
+                if (window.pageYOffset > 300) {
+                    backToTop.classList.add('visible');
+                } else {
+                    backToTop.classList.remove('visible');
+                }
+            });
+
+            // New: Section Fade-In on Scroll
+            const sectionObservers = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.section').forEach(section => {
+                sectionObservers.observe(section);
+            });
         });
     </script>
 </body>
