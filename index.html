@@ -46,6 +46,7 @@
 
         html {
             scroll-behavior: smooth;
+            overflow-x: hidden; /* Fix: Prevent horizontal scrolling */
         }
 
         body {
@@ -54,9 +55,10 @@
             color: var(--color-light-text);
             line-height: 1.6;
             min-height: 100vh;
-            /* 全頁面的微弱斜線科技背景 */
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='%233B82F6' stroke-width='1.5' opacity='0.08'%3E%3Cpath d='M-10 10 L 90 90 M-10 30 L 70 110 M-10 50 L 50 130 M-10 70 L 30 150 M10 90 L -10 110 M30 70 L 50 90'/%3E%3C/g%3E%3C/svg%3E");
+            /* 全頁面的微弱斜線科技背景 (調整 paths 以避免負坐標溢出) */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='%233B82F6' stroke-width='1.5' opacity='0.08'%3E%3Cpath d='M0 10 L 100 90 M0 30 L 80 110 M0 50 L 60 130 M0 70 L 40 150 M20 90 L 0 110 M40 70 L 60 90'/%3E%3C/g%3E%3C/svg%3E");
             background-attachment: fixed;
+            overflow-x: hidden; /* Fix: Prevent horizontal scrolling */
         }
 
         /* 修正固定導航欄遮擋問題 */
@@ -1162,7 +1164,7 @@
                     <div class="faq-answer-content">
                         <!-- ANSWER: 加上 text-lg -->
                         <p class="py-4 text-lg">費用包含：<strong><span class="text-yellow-400">所有課程費用、專業講義教材、保險費</span></strong>，以及<strong><span class="text-yellow-400">三日午晚餐</span></strong>。住宿為選配，需加收 $1,500 元（含每日早餐）。<br>
-                        團報操作非常簡單：只要由**一位團長**負責填寫 Google 表單，並註明所有團員姓名即可享有折扣。請注意，團報人數需一致，且需一次性繳費。</p>
+                        團報操作非常簡單：只要由**一位團長**負責填寫 Google 表單，並註明所有團員姓名姓名即可享有折扣。請注意，團報人數需一致，且需一次性繳費。</p>
                     </div>
                 </div>
                 
