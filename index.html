@@ -492,6 +492,30 @@
             margin-top: 4px;
         }
 
+        /* Scroll Progress Bar */
+        .scroll-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 0%;
+            height: 2px; /* Reduced height to make less obtrusive */
+            background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+            z-index: 101;
+            transition: width 0.1s ease-out, opacity 0.3s ease;
+            box-shadow: 0 0 10px rgba(6, 182, 212, 0.6);
+            opacity: 0;
+        }
+
+        .scroll-progress.visible {
+            opacity: 1;
+        }
+
+        /* Make header position relative for absolute positioning of progress bar */
+        header {
+            position: relative;
+        }
+
         /* Active Navigation Link */
         nav a.nav-active {
             color: var(--color-accent) !important;
@@ -571,6 +595,7 @@
     </style>
 </head>
 <body>
+
     <!-- 報名截止倒數橫幅 -->
     <div class="deadline-banner">
         ⏰ 報名截止倒數中！最後機會：2026年1月3日截止 <a href="https://forms.gle/kK6SNVtYb5uUNRvs6" target="_blank">立即報名 →</a>
@@ -621,6 +646,8 @@
         </nav>
     </div>
         </div>
+        <!-- Scroll Progress Bar -->
+        <div class="scroll-progress" id="scrollProgress"></div>
     </header>
 
     <!-- H1: HERO 區塊 -->
@@ -1243,9 +1270,9 @@
                 <p>聯絡信箱：<span class="text-primary-blue">ircm@ncku.edu.tw</span> | 電話：06-2757575</p>
                 <!-- New: Social Media Links -->
                 <div class="mt-4 flex justify-center space-x-4">
-                    <a href="#" class="text-accent-cyan hover:text-primary-blue"><i class="fab fa-facebook-f text-xl"></i></a>
+                    <a href="https://www.facebook.com/profile.php?id=61568089536374&mibextid=LQQJ4d" class="text-accent-cyan hover:text-primary-blue"><i class="fab fa-facebook-f text-xl"></i></a>
                     <a href="#" class="text-accent-cyan hover:text-primary-blue"><i class="fab fa-instagram text-xl"></i></a>
-                    <a href="#" class="text-accent-cyan hover:text-primary-blue"><i class="fab fa-twitter text-xl"></i></a>
+                    <!-- <a href="#" class="text-accent-cyan hover:text-primary-blue"><i class="fab fa-twitter text-xl"></i></a> -->
                 </div>
             </div>
         </div>
@@ -1345,6 +1372,26 @@
             updateCountdown();
             setInterval(updateCountdown, 1000);
 
+            // --- Scroll Progress Bar Logic ---
+            const scrollProgress = document.getElementById('scrollProgress');
+            let scrollTimeout;
+            
+            function updateScrollProgress() {
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                const scrollPercent = (scrollTop / docHeight) * 100;
+                scrollProgress.style.width = scrollPercent + '%';
+            }
+
+            window.addEventListener('scroll', () => {
+                updateScrollProgress();
+                scrollProgress.classList.add('visible');
+                
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(() => {
+                    scrollProgress.classList.remove('visible');
+                }, 1500); // Hide after 1.5 seconds of no scrolling
+            });
 
             // --- Navigation Active State (Scrollspy) Logic ---
             const sections = document.querySelectorAll('section[id]');
