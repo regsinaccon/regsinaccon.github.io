@@ -12,12 +12,12 @@
     <!-- Add AOS for animations -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <style>
-        /* --- 1. 全局變量與基本設定 (深色科技主題) --- */
+        /* --- 1. 全局變量與基本設定 (調整為太空主題) --- */
         :root {
-            --color-primary: #3B82F6;       /* 核心亮藍色 (Accent Blue) */
-            --color-accent: #06B6D4;        /* 強調青色 (Vibrant Cyan for Glow) */
-            --color-dark-bg: #0A0A1F;       /* 主背景 (Very Dark Blue/Black) */
-            --color-card-bg: #1A1A30;       /* 卡片背景 (Slightly Lighter Dark) */
+            --color-primary: #4A90E2;       /* 調整為太空藍色 (Space Blue) */
+            --color-accent: #00BFFF;        /* 強調亮藍色 (Deep Sky Blue for Glow) */
+            --color-dark-bg: #000000;       /* 主背景 (Deep Black for Space) */
+            --color-card-bg: #111111;       /* 卡片背景 (Dark Gray) */
             --color-light-text: #E5E7EB;    /* 淺色文字 */
             --color-gray-text: #9CA3AF;     /* 灰色輔助文字 */
         }
@@ -37,11 +37,11 @@
                     fontFamily: {
                         sans: ['Inter', 'Microsoft JhengHei', 'sans-serif'],
                     },
-                    /* 模擬科技感光暈效果 */
+                    /* 模擬太空光暈效果 */
                     boxShadow: {
-                        'glow': '0 0 10px rgba(59, 130, 246, 0.5), 0 0 20px rgba(59, 130, 246, 0.2)',
+                        'glow': '0 0 10px rgba(74, 144, 226, 0.5), 0 0 20px rgba(74, 144, 226, 0.2)',
                         'custom': '0 5px 15px rgba(0, 0, 0, 0.5)', /* 師資卡片陰影 */
-                        'cyan-glow': '0 0 8px rgba(6, 182, 212, 0.6)',
+                        'cyan-glow': '0 0 8px rgba(0, 191, 255, 0.6)',
                         'red-glow': '0 0 8px rgba(239, 68, 68, 0.6)', /* 獎金卡片紅色光暈 */
                     }
                 }
@@ -59,8 +59,10 @@
             color: var(--color-light-text);
             line-height: 1.6;
             min-height: 100vh;
-            /* 全頁面的微弱斜線科技背景 (調整 paths 以避免負坐標溢出) */
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='%233B82F6' stroke-width='1.5' opacity='0.08'%3E%3Cpath d='M0 10 L 100 90 M0 30 L 80 110 M0 50 L 60 130 M0 70 L 40 150 M20 90 L 0 110 M40 70 L 60 90'/%3E%3C/g%3E%3C/svg%3E");
+            /* 調整為太空漸層背景 + 星星圖案 */
+            background: linear-gradient(to bottom, #000000, #333333);
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Ccircle cx='10' cy='10' r='1' fill='%23fff' opacity='0.5'/%3E%3Ccircle cx='30' cy='80' r='1' fill='%23fff' opacity='0.3'/%3E%3Ccircle cx='50' cy='40' r='2' fill='%23fff' opacity='0.4'/%3E%3Ccircle cx='70' cy='20' r='1' fill='%23fff' opacity='0.6'/%3E%3Ccircle cx='90' cy='60' r='1' fill='%23fff' opacity='0.5'/%3E%3Ccircle cx='15' cy='50' r='1' fill='%23fff' opacity='0.4'/%3E%3Ccircle cx='85' cy='30' r='1' fill='%23fff' opacity='0.5'/%3E%3Ccircle cx='45' cy='90' r='1' fill='%23fff' opacity='0.3'/%3E%3C/svg%3E"), linear-gradient(to bottom, #000000, #333333);
+            background-repeat: repeat;
             background-attachment: fixed;
             overflow-x: hidden; /* Fix: Prevent horizontal scrolling */
         }
@@ -695,7 +697,7 @@
                 </div>
                 <div class="hidden md:block hero-image-container">
                     <!-- 模擬科技感的抽象圖像 -->
-                    <img src="https://scontent.fkhh2-1.fna.fbcdn.net/v/t39.30808-6/574868365_122164993568602984_5939296630996332105_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=cc71e4&_nc_ohc=9FvrJFYP_8YQ7kNvwFlKuIS&_nc_oc=Adm-1K0Zeq_dlHkFJ2RzM3A7UM01QmV4Et9rnZ0Uly6PYSnaWsV4Ix8Yr5Xzh9ampe0PCFRqVYB-lm_fl3B9A7qU&_nc_zt=23&_nc_ht=scontent.fkhh2-1.fna&_nc_gid=mG0ZOppHIdYcKIYhcdZ1Dw&oh=00_AfhrdwhQBzBlnBUbhDFVl3JcbjWfS0COpr__fcgutTlQ0A&oe=69209C96" onerror="this.src='https://placehold.co/600x400/1A1A30/3B82F6?text=AI%20Data%20Flow'" alt="AI建模視覺化" class="rounded-xl shadow-glow w-full">
+                    <img src="https://scontent-tpe1-1.xx.fbcdn.net/v/t39.30808-6/573503000_122164460192602984_654209996646225906_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=a5f93a&_nc_ohc=0dO3rT8xT9UQ7kNvwEw3AaO&_nc_oc=AdmMv9-kh8_IE1q0EdElAp3Saud3y4tCZAkjiazazlBv96AoTa63lngRmU736w5Fy_U&_nc_zt=23&_nc_ht=scontent-tpe1-1.xx&_nc_gid=wWob-ZSJS94J9YGPmOFiIA&oh=00_AfhHt8IlH1Id0zLwRzTiyaGNqdiB3fcaUhN-ZQaQVgpu_w&oe=69221C44" onerror="this.src='https://placehold.co/600x400/1A1A30/3B82F6?text=AI%20Data%20Flow'" alt="AI建模視覺化" class="rounded-xl shadow-glow w-full">
                 </div>
             </div>
         </div>
