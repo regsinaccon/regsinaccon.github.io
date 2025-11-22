@@ -12,15 +12,17 @@
     <!-- Add AOS for animations -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <style>
-        /* --- 1. 全局變量與基本設定 (調整為太空主題) --- */
-        :root {
-            --color-primary: #4A90E2;       /* 調整為太空藍色 (Space Blue) */
-            --color-accent: #00BFFF;        /* 強調亮藍色 (Deep Sky Blue for Glow) */
-            --color-dark-bg: #000000;       /* 主背景 (Deep Black for Space) */
-            --color-card-bg: #111111;       /* 卡片背景 (Dark Gray) */
-            --color-light-text: #E5E7EB;    /* 淺色文字 */
-            --color-gray-text: #9CA3AF;     /* 灰色輔助文字 */
-        }
+        /* --- 1. 全局變量與基本設定 (深色科技主題) --- */
+        
+:root {
+    --color-primary: #FF4500;       /* OrangeRed for accents */
+    --color-accent: #32CD32;        /* LimeGreen for highlights */
+    --color-dark-bg: #87CEEB;       /* SkyBlue for background */
+    --color-card-bg: #FFFACD;       /* LemonChiffon for cards, parchment-like */
+    --color-light-text: #4B0082;    /* Indigo for main text */
+    --color-gray-text: #4b5563;     /* Gray for secondary text */
+}
+
         
         /* Tailwind 設定客製化 */
         tailwind.config = {
@@ -37,11 +39,11 @@
                     fontFamily: {
                         sans: ['Inter', 'Microsoft JhengHei', 'sans-serif'],
                     },
-                    /* 模擬太空光暈效果 */
+                    /* 模擬科技感光暈效果 */
                     boxShadow: {
-                        'glow': '0 0 10px rgba(74, 144, 226, 0.5), 0 0 20px rgba(74, 144, 226, 0.2)',
+                        'glow': '0 0 10px rgba(59, 130, 246, 0.5), 0 0 20px rgba(59, 130, 246, 0.2)',
                         'custom': '0 5px 15px rgba(0, 0, 0, 0.5)', /* 師資卡片陰影 */
-                        'cyan-glow': '0 0 8px rgba(0, 191, 255, 0.6)',
+                        'cyan-glow': '0 0 8px rgba(6, 182, 212, 0.6)',
                         'red-glow': '0 0 8px rgba(239, 68, 68, 0.6)', /* 獎金卡片紅色光暈 */
                     }
                 }
@@ -53,19 +55,44 @@
             overflow-x: hidden; /* Fix: Prevent horizontal scrolling */
         }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--color-dark-bg);
-            color: var(--color-light-text);
-            line-height: 1.6;
-            min-height: 100vh;
-            /* 調整為太空漸層背景 + 星星圖案 */
-            background: linear-gradient(to bottom, #000000, #333333);
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Ccircle cx='10' cy='10' r='1' fill='%23fff' opacity='0.5'/%3E%3Ccircle cx='30' cy='80' r='1' fill='%23fff' opacity='0.3'/%3E%3Ccircle cx='50' cy='40' r='2' fill='%23fff' opacity='0.4'/%3E%3Ccircle cx='70' cy='20' r='1' fill='%23fff' opacity='0.6'/%3E%3Ccircle cx='90' cy='60' r='1' fill='%23fff' opacity='0.5'/%3E%3Ccircle cx='15' cy='50' r='1' fill='%23fff' opacity='0.4'/%3E%3Ccircle cx='85' cy='30' r='1' fill='%23fff' opacity='0.5'/%3E%3Ccircle cx='45' cy='90' r='1' fill='%23fff' opacity='0.3'/%3E%3C/svg%3E"), linear-gradient(to bottom, #000000, #333333);
-            background-repeat: repeat;
-            background-attachment: fixed;
-            overflow-x: hidden; /* Fix: Prevent horizontal scrolling */
-        }
+        
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--color-dark-bg);
+    color: var(--color-light-text);
+    line-height: 1.6;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+}
+
+.bg-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: -2;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+#day-bg {
+    background-image: url('https://images.squarespace-cdn.com/content/v1/551a19f8e4b0e8322a93850a/1542954519870-8XJJ4CUXPBEAZHGN6OBT/Landscape.png');
+    z-index: -2;
+}
+
+#night-bg {
+    background-image: url('https://thumbs.dreamstime.com/b/pixel-art-night-landscape-ruins-mountains-367246194.jpg');
+    opacity: 0;
+    z-index: -1;
+}
+
+img {
+    image-rendering: pixelated; /* For any images */
+}
+
 
         /* 修正固定導航欄遮擋問題 */
         .section {
@@ -80,8 +107,6 @@
         .hero-section {
             padding-top: 140px;
             padding-bottom: 140px;
-            background-color: var(--color-dark-bg);
-            background-image: none; 
             text-align: left;
             border-bottom: 1px solid rgba(59, 130, 246, 0.1);
             margin-top: 0; 
@@ -594,9 +619,142 @@
             opacity: 1;
             transform: translateY(0);
         }
-    </style>
+    
+/* RPG style adjustments */
+
+.price-card, .award-card, .faq-item, .accommodation-card {
+    border: 4px solid #000000;
+    box-shadow: none;
+    background-color: var(--color-card-bg);
+}
+
+.cta-button {
+    border: 3px solid #000000;
+    background-color: #FFD700; /* Gold */
+    color: #000000;
+    padding: 8px 16px;
+    text-transform: uppercase;
+}
+
+.cta-button:hover {
+    background-color: #FFFF00; /* Brighter yellow */
+}
+
+.hero-section {
+    text-align: center;
+    padding-top: 100px;
+    padding-bottom: 100px;
+}
+/* Improved Visibility & Contrast Fixes */
+
+/* 1. Box the Hero Content so text pops out from the background image */
+.hero-content {
+    background-color: var(--color-card-bg); /* Uses your dynamic day/night color */
+    background-color: color-mix(in srgb, var(--color-card-bg), transparent 10%); /* Make it slightly transparent (modern browsers) */
+    /* Fallback for older browsers if needed: opacity: 0.9; */
+    
+    backdrop-filter: blur(8px); /* Blurs the background image behind the text */
+    padding: 2rem;              /* Adds space inside the box */
+    border-radius: 1rem;        /* Rounded corners */
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Subtle border */
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37); /* Soft shadow for depth */
+    transition: background-color 0.1s; /* Smooth transition when scrolling */
+}
+
+/* 2. Enhance Text Contrast Globally */
+h1, h2, h3, p, a {
+    /* Adds a subtle shadow to text to separate it from any background */
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1); 
+}
+
+/* 3. Make the headings even clearer */
+h1, h2 {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* 4. Ensure content sections have a readable background */
+/* Instead of transparent sections, give them a subtle backing */
+.section .container {
+    background-color: color-mix(in srgb, var(--color-card-bg), transparent 15%);
+    backdrop-filter: blur(5px);
+    border-radius: 20px;
+    padding: 2rem;
+    margin-top: 2rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+/* 5. Fix specific text colors that might be low contrast */
+.text-gray-text {
+    color: var(--color-light-text) !important; /* Force gray text to use the main high-contrast text color instead */
+    opacity: 0.8; /* Use opacity to distinguish it, rather than a light gray color */
+}   
+/* Update .hero-content to be more solid for better readability */
+.hero-content {
+    /* Increased opacity (transparent 5% instead of 10%) for better blocking of the busy background */
+    background-color: color-mix(in srgb, var(--color-card-bg), transparent 5%); 
+    backdrop-filter: blur(12px); /* Stronger blur */
+    /* ... rest of existing styles ... */
+}
+
+/* Add a stronger shadow to ALL text to separate it from the background */
+/* This is crucial for the "Twilight" phase where colors might be similar */
+h1, h2, h3, p, a, span, div {
+    text-shadow: 0 0 1px rgba(0,0,0,0.05), 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* Specific fix for the Navigation Bar text */
+nav a {
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8); /* heavy shadow for nav links to pop over the header */
+    font-weight: 600; /* Make font slightly bolder */
+}
+
+/* Fix for Price/Info Cards */
+.price-card, .award-card, .info-card {
+    /* Ensure these cards have a solid enough background */
+    background-color: var(--color-card-bg); 
+    /* Add a subtle border that contrasts in both modes */
+    border: 1px solid rgba(128, 128, 128, 0.3);
+}
+/* --- FIX FOR SMALL TEXT VISIBILITY --- */
+
+/* 1. Boost contrast for all small text classes */
+.text-sm, .text-xs, .schedule-details, .text-gray-400, .text-gray-500, .faq-answer-content {
+    color: var(--color-gray-text) !important; /* Force them to use our dynamic high-contrast variable */
+    font-weight: 500; /* Make thin text slightly bolder */
+    text-shadow: none; /* Remove blurry shadows from small text, they make it muddy */
+}
+
+/* 2. Add a "Hard Outline" only if strictly necessary (optional, good for mixed mode) */
+.text-sm, .text-xs {
+    /* Creates a tiny stroke around letters to separate them from background */
+    text-shadow: 0 0 1px rgba(0,0,0,0.1); 
+}
+
+/* 3. Solidify the Background Blocks */
+/* Increasing opacity ensures the background image doesn't bleed through small text */
+.section .container, 
+.price-card, 
+.award-card, 
+.info-card,
+.tab-content .p-4 { /* Targets the Schedule/Program blocks */
+    /* Increase opacity to 90% (0.9) or 95% (0.95) */
+    background-color: color-mix(in srgb, var(--color-card-bg), transparent 5%) !important;
+    backdrop-filter: blur(15px); /* Higher blur to wash out the image behind */
+    border: 1px solid rgba(128, 128, 128, 0.2); /* Crisp border definition */
+}
+
+/* 4. Fix Schedule/Program List Contrast */
+.schedule-item {
+    border-bottom: 1px solid var(--color-gray-text); /* Make separator lines clearer */
+    opacity: 0.9; /* Prevent the item itself from being see-through */
+}
+
+</style>
 </head>
 <body>
+
+    <div id="day-bg" class="bg-container"></div>
+    <div id="night-bg" class="bg-container"></div>
 
     <!-- 報名截止倒數橫幅 -->
     <div class="deadline-banner">
@@ -611,7 +769,7 @@
 
     <!-- 導航欄 (Navigation) -->
     <!-- 導航欄已使用 bg-dark-bg 和 shadow-lg 確保有固定的底色和陰影，不會干擾下方內容 -->
-    <header class="sticky top-0 bg-dark-bg/95 backdrop-blur-md shadow-lg z-50 border-b border-primary-blue/30">
+    <header class="sticky top-0 bg-dark-bg shadow-lg z-50 border-b border-primary-blue/30">
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
             <a href="#hero" class="text-2xl font-bold text-accent-cyan hover:text-white transition">MATHINK 2026</a>
             <nav class="hidden md:flex space-x-6 text-light-text">
@@ -704,7 +862,7 @@
     </section>
 
     <!-- 營隊資訊區塊 (Camp Information) -->
-    <section id="info" class="section bg-card-bg/50 border-t border-b border-primary-blue/30" data-aos="fade-up">
+    <section id="info" class="section bg-card-bg border-t border-b border-primary-blue/30" data-aos="fade-up">
         <div class="container mx-auto px-4 text-center">
             <h2 class="text-3xl font-bold text-light-text mb-4">MATHINK 2026 營隊資訊</h2>
             <p class="text-lg mb-8 text-gray-400">MATHINK 數創營致力於培養具備數學建模能力的未來人才，透過理論與實作並重的課程設計，讓學員體驗數學在現實世界的應用。</p>
@@ -957,7 +1115,7 @@
 
                 <!-- Tab Content: Day 1 (1/28) - 始動 -->
                 <div class="tab-content" id="day1">
-                    <div class="p-4 bg-card-bg/20 rounded-lg shadow-lg">
+                    <div class="p-4 bg-card-bg rounded-lg shadow-lg">
                         <h3 class="text-xl font-bold text-accent-cyan mb-4">Day 1 (1/28 三) - 始動：入學與數學啟蒙</h3>
                         
                         <div class="schedule-item">
@@ -1000,7 +1158,7 @@
 
                 <!-- Tab Content: Day 2 (1/29) - 實戰 -->
                 <div class="tab-content hidden" id="day2">
-                    <div class="p-4 bg-card-bg/20 rounded-lg shadow-lg">
+                    <div class="p-4 bg-card-bg rounded-lg shadow-lg">
                         <h3 class="text-xl font-bold text-accent-cyan mb-4">Day 2 (1/29 四) - 實戰：AI與數理建模</h3>
                         
                         <div class="schedule-item">
@@ -1041,7 +1199,7 @@
 
                 <!-- Tab Content: Day 3 (1/30) - 挑戰 -->
                 <div class="tab-content hidden" id="day3">
-                    <div class="p-4 bg-card-bg/20 rounded-lg shadow-lg">
+                    <div class="p-4 bg-card-bg rounded-lg shadow-lg">
                         <h3 class="text-xl font-bold text-accent-cyan mb-4">Day 3 (1/30 五) - 挑戰：專案優化與交流</h3>
 
                         <div class="schedule-item">
@@ -1082,7 +1240,7 @@
 
                 <!-- Tab Content: Day 4 (1/31) - 結業 -->
                 <div class="tab-content hidden" id="day4">
-                    <div class="p-4 bg-card-bg/20 rounded-lg shadow-lg">
+                    <div class="p-4 bg-card-bg rounded-lg shadow-lg">
                         <h3 class="text-xl font-bold text-accent-cyan mb-4">Day 4 (1/31 六) - 結業：展示與賦歸</h3>
 
                         <div class="schedule-item">
@@ -1226,7 +1384,7 @@
                     </button>
                     <div class="faq-answer-content">
                         <!-- ANSWER: 加上 text-lg -->
-                        <p class="py-4 text-lg">課程內容會從基礎開始，並採取「做中學 (Learning by Doing)」的方式。雖然課程主題前瞻，但所有程式基礎 (Python, Pandas, SQLite) 都會從零開始帶領。只要你對數學建模、數據分析有熱忱，即使是初學者也能跟上進度。競賽中也會有輔導員隨時提供技術支援。</p>
+                        <p class="py-4 text-lg">課程內容會從基礎開始，並採取「做中學 (Learning by Doing)」的方式。雖然課程主題前瞻，但所有程式基礎 (Python, Pandas, SQLite) 都會從零開始帶領帶領。只要你對數學建模、數據分析有熱忱，即使是初學者也能跟上進度。競賽中也會有輔導員隨時提供技術支援。</p>
                     </div>
                 </div>
 
@@ -1385,15 +1543,33 @@
                 scrollProgress.style.width = scrollPercent + '%';
             }
 
-            window.addEventListener('scroll', () => {
-                updateScrollProgress();
-                scrollProgress.classList.add('visible');
-                
-                clearTimeout(scrollTimeout);
-                scrollTimeout = setTimeout(() => {
-                    scrollProgress.classList.remove('visible');
-                }, 1500); // Hide after 1.5 seconds of no scrolling
-            });
+    window.addEventListener('scroll', () => {
+    const scrollPercent = getScrollPercent();
+    
+    // --- SMART TEXT CONTRAST LOGIC ---
+    // This ensures text switches color QUICKLY, avoiding the "invisible gray" middle zone.
+    
+    // 1. Calculate a "Step" curve for text color
+    // The text stays Dark until 50% scroll, then rapidly switches to White
+    let textFactor = (scrollPercent - 0.5) * 10; // Higher multiplier = faster switch
+    textFactor = Math.max(0, Math.min(1, textFactor + 0.5)); 
+
+    // 2. Apply colors
+    const lightText = interpolateColor(dayLightText, nightLightText, textFactor);
+    const grayText = interpolateColor(dayGrayText, nightGrayText, textFactor); // Use the new stepped factor
+    
+    // Backgrounds can transition smoothly (linear)
+    const cardBg = interpolateColor(dayCardBg, nightCardBg, scrollPercent);
+    const darkBg = interpolateColor(dayDarkBg, nightDarkBg, scrollPercent);
+
+    // 3. Set Variables
+    document.documentElement.style.setProperty('--color-light-text', lightText);
+    document.documentElement.style.setProperty('--color-gray-text', grayText);
+    document.documentElement.style.setProperty('--color-card-bg', cardBg);
+    document.documentElement.style.setProperty('--color-dark-bg', darkBg);
+    
+    // ... your existing progress bar code ...
+});
 
             // --- Navigation Active State (Scrollspy) Logic ---
             const sections = document.querySelectorAll('section[id]');
@@ -1509,6 +1685,66 @@
 
             document.querySelectorAll('.section').forEach(section => {
                 sectionObservers.observe(section);
+            });
+
+            // Background transition on scroll
+            window.addEventListener('scroll', () => {
+                const scrollY = window.scrollY;
+                const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+                const scrollPercent = scrollY / maxScroll;
+                document.getElementById('night-bg').style.opacity = scrollPercent;
+
+                // Color interpolation
+                function hexToRgb(hex) {
+                    let r = parseInt(hex.slice(1, 3), 16);
+                    let g = parseInt(hex.slice(3, 5), 16);
+                    let b = parseInt(hex.slice(5, 7), 16);
+                    return { r, g, b };
+                }
+
+                function rgbToHex(r, g, b) {
+                    return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+                }
+
+                function interpolateColor(color1, color2, factor) {
+                    const c1 = hexToRgb(color1);
+                    const c2 = hexToRgb(color2);
+                    const r = Math.round(c1.r + (c2.r - c1.r) * factor);
+                    const g = Math.round(c1.g + (c2.g - c1.g) * factor);
+                    const b = Math.round(c1.b + (c2.b - c1.b) * factor);
+                    return rgbToHex(r, g, b);
+                }
+
+                // Day to night colors
+                // Day to night colors
+                const dayLightText = '#000000';
+                const nightLightText = '#FFFFFF';
+
+                // High Contrast Grays: Darker for Day, Whiter for Night
+                const dayGrayText = '#1f2937';   // Very dark gray (almost black) for Day
+                const nightGrayText = '#f3f4f6'; // Very light gray (almost white) for Night
+
+                const dayCardBg = '#FFFFFF';
+                const nightCardBg = '#1a1a2e';   // Dark Navy instead of Gray for better contrast
+                const dayDarkBg = '#87CEEB';
+                const nightDarkBg = '#0A0A1F';
+                let textFactor = (scrollPercent - 0.5) * 5; 
+textFactor = Math.max(0, Math.min(1, textFactor)); // Clamp value between 0 and 1
+
+const lightText = interpolateColor(dayLightText, nightLightText, textFactor);
+const grayText = interpolateColor(dayGrayText, nightGrayText, textFactor);
+
+// Backgrounds can keep the smooth linear transition
+const cardBg = interpolateColor(dayCardBg, nightCardBg, scrollPercent);
+const darkBg = interpolateColor(dayDarkBg, nightDarkBg, scrollPercent);
+
+// Apply the variables
+document.documentElement.style.setProperty('--color-light-text', lightText);
+document.documentElement.style.setProperty('--color-gray-text', grayText);
+document.documentElement.style.setProperty('--color-card-bg', cardBg);
+document.documentElement.style.setProperty('--color-dark-bg', darkBg);
+                
+                
             });
         });
     </script>
